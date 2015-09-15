@@ -1,0 +1,267 @@
+package com.company;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Random;
+import java.util.Scanner;
+
+/**
+ * Monte Carlo Lab for AP Computer Science
+ * Written by Stefan Kussmaul September 2015
+ */
+public class Main {
+
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final Random random = new Random();
+    private static int numSimulations = 1_000;
+    private static long startTime;
+    private static long endTime;
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to Monte Carlo!\n");
+        while(true) {
+            printMainMenu();
+            String user_input = getInput();
+            handleInput(user_input);
+            System.out.println();
+        }
+    }
+
+    public static void printMainMenu() {
+        println("Available Simulations\n" +
+                "1........Problem 1\n" +
+                "2........Problem 2\n" +
+                "3........Problem 3\n" +
+                "4........Problem 4\n" +
+                "5........Problem 5\n" +
+                "6........Problem 6\n" +
+                "7........Exit Program\n" +
+                "8........Set Num Simulations\n" +
+                "Choose an Option (1-7):");
+    }
+
+    // parses user input, handles any errors,
+    // and starts specified simulation
+    public static void handleInput(String input) {
+        double result = 0;
+        if(input.equals("") || input.isEmpty()) {
+            println("Please enter a choice (1-8)");
+        } else {
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice < 1 || choice > 8) {
+                    println("Error: choice must be in range 1 - 8 inclusive\n");
+                } else {
+                    executeCommand(choice);
+                }
+            } catch (NumberFormatException e) {
+                println("Error: \"" + input + "\" is not a valid choice\n");
+            }
+        }
+    }
+
+    // takes *handled* menu choice and executes proper function
+    public static void executeCommand(int menuChoice) {
+        double result = 0.0;
+        if(menuChoice > 0 && menuChoice < 7) {
+            println("Running Simulation " + menuChoice + "...");
+        }
+        String output = "";
+        startTime = System.currentTimeMillis();
+        switch(menuChoice) {
+            case 1:
+                result = problem1();
+                output = ("Simulated value of pi: " + result);
+                break;
+            case 2:
+                result = problem2();
+                NumberFormat money_format = NumberFormat.getCurrencyInstance();
+                if(result >= 0) {
+                    output = ("Simulated average winnings of " + money_format.format(result));
+                } else {
+                    output = ("Simulated average loss of " + money_format.format(-result));
+                }
+                break;
+            case 3:
+                result = problem3();
+                DecimalFormat cards_format = new DecimalFormat("#.##");
+                output = ("Simulated average of " + cards_format.format(result) + " cards required");
+                break;
+            case 4:
+                result = problem4();
+                NumberFormat p_format = NumberFormat.getPercentInstance();
+                output = ("Simulated chance of meeting: " + p_format.format(result));
+                break;
+            case 5:
+                result = problem5();
+                p_format = NumberFormat.getPercentInstance();
+                output = ("Simulated chance of same birthday: " + p_format.format(result));
+                break;
+            case 6:
+                result = problem6();
+                DecimalFormat area_format = new DecimalFormat("#.#######");
+                output = ("Simulated area: " + area_format.format(result));
+                break;
+            case 7:
+                println("Exiting Program...");
+                System.exit(0);
+                break;
+            case 8:
+                println("Enter number of simulations to run:");
+                String user_input = getInput();
+                try {
+                    int new_num = Integer.parseInt(user_input);
+                    if(new_num > 0) {
+                        numSimulations = new_num;
+                    } else {
+                        println("Error: number of simulations must be positive");
+                    }
+                } catch(NumberFormatException e) {
+                    println("Error: \"" + user_input + "\" is an invalid number");
+                }
+                break;
+        }
+        endTime = System.currentTimeMillis();
+        if(menuChoice != 8) {
+            System.out.println(output + " over " + numSimulations + " simulations");
+            System.out.println("Ran in " + (endTime - startTime) + "ms");
+        }
+    }
+    public static double problem1() {
+        double approx = 0;
+        for(int i = 0; i < numSimulations; i++) {
+            int num_points = 0;
+            for(int j = 0; j < 10_000; j++) {
+                if(Math.pow(random.nextDouble(), 2) + Math.pow(random.nextDouble(), 2) <= 1) {
+                    num_points++;
+                }
+            }
+            approx += (double) num_points / 10_000;
+        }
+        return approx / numSimulations * 4;
+    }
+
+    public static double problem2() {
+        double total_winnings = 0;
+        for(int i = 0; i < numSimulations; i++) {
+            int round_winnings = 0;
+            for(int j = 0; j < 100; j++) {
+                int dice = random.nextInt(6) + random.nextInt(6) + 2;
+                if(dice == 5 || dice == 8) {
+                    round_winnings -= 20;
+                } else {
+                    round_winnings += 5;
+                }
+            }
+            total_winnings += round_winnings;
+        }
+        return total_winnings / numSimulations;
+    }
+
+    public static double problem3() {
+        int total_cards = 0;
+        for(int i = 0; i < numSimulations; i++) {
+            int[] deck = newDeck();
+            shuffle(deck);
+            int j;
+            for(j = 0; j < 52; j++) {
+                if(deck[j] == 0)
+                    break;
+            }
+            total_cards += j++;
+        }
+        return (double) total_cards / numSimulations + 1;
+    }
+
+    // generates a new deck and returns as an int[]
+    // of size 52
+    public static int[] newDeck() {
+        int[] new_deck = new int[52];
+        for(int i = 0; i < 52; i++) {
+            new_deck[i] = i / 4;
+        }
+        return new_deck;
+    }
+
+    // shuffles array
+    private static void shuffle(int[] deck) {
+        for(int i = 0; i < 52; i++) {
+            int new_pos = random.nextInt(52);
+            int current_card = deck[i];
+            deck[i] = deck[new_pos];
+            deck[new_pos] = current_card;
+        }
+    }
+
+    private static double problem4() {
+        int total_meets = 0;
+        for(int i = 0; i < numSimulations; i++) {
+            int time_1 = random.nextInt(60);
+            int time_2 = random.nextInt(60);
+            if(Math.abs(time_1 - time_2) <= 10) {
+                total_meets++;
+            }
+        }
+        return (double) total_meets / numSimulations;
+    }
+
+    private static double problem5() {
+        int num_same = 0;
+        for(int i = 0; i < numSimulations; i++) {
+            int[][] room = newRoom(30);
+            randomizeRoom(room);
+            for(int j = 0; j < room[0].length + 1; j++) {
+                for(int k = j + 1; k < room[0].length; k++) {
+                    if(room[0][j] == room[0][k] && room[1][j] == room[1][k]) {
+                        num_same++;
+                        j = room[0].length;
+                        break;
+                    }
+                }
+            }
+        }
+        return (double) num_same / numSimulations;
+    }
+
+    // creates a new int[][] representing a room full of people
+    private static int[][] newRoom(int num_people) {
+        return new int[2][num_people];
+    }
+
+    // randomizes birth dates of people in room
+    private static void randomizeRoom(int[][] room) {
+        // randomize month and day
+        Calendar this_month = Calendar.getInstance();
+        for(int i = 0; i < room[0].length; i++) {
+            room[0][i] = random.nextInt(12);
+            this_month.set(Calendar.MONTH, room[0][i]);
+            room[1][i] = random.nextInt(this_month.getMaximum(Calendar.DAY_OF_MONTH));
+        }
+    }
+
+    private static double problem6() {
+        double shaded_points = 0;
+        for(int i = 0; i < numSimulations; i++) {
+            int sim_points = 0;
+            for(int j = 0; j < 10_000; j++) {
+                double x = random.nextDouble();
+                double y = random.nextDouble() * 6;
+                if(y <= x * x - 5 * x + 6) {
+                    sim_points++;
+                }
+            }
+            shaded_points += (double) sim_points / 10_000;
+        }
+        return shaded_points / numSimulations * 6;
+    }
+
+    // returns console input
+    public static String getInput() {
+        return scanner.nextLine();
+    }
+
+    // prints String
+    public static void println(String s) {
+        System.out.println(s);
+    }
+}
