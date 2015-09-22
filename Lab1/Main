@@ -2,7 +2,7 @@
  * Simple Algorithms Lab for AP Computer Science
  * Written by Stefan Kussmaul September 2015
  */
-public class Main {
+public class MathUtil {
 
     // returns whether dividend can be cleanly divided by divisor
     // i.e. without a decimal remainder
@@ -104,8 +104,24 @@ public class Main {
         }
         return result;
     }
-    
+
     public static void downDigits(int num) {
-        
+        if(num < 0) {
+            num *= -1;
+        }
+        for(int i = countDigits(num); i > 0; i--) {
+            System.out.println(findDigit(num, i));
+        }
+    }
+
+    // returns the number of digits in int
+    public static int countDigits(int num) {
+        num /= 10;
+        int digits = 1;
+        while(num > 0) { // todo: will in be 0?
+            num /= 10;
+            digits++;
+        }
+        return digits;
     }
 }
