@@ -10,7 +10,7 @@ public class MathUtil {
         if(divisor == 0) {
             return false;
         }
-        return (dividend / divisor) % 1 == 0;
+        return ((double) dividend / divisor) % 1 == 0;
     }
 
     // prints all factors of given positive integer
@@ -83,17 +83,16 @@ public class MathUtil {
 
     // returns base raised to the power exponent
     public static double power(double base, int exponent) {
-        double multiplier = base;
-        if(exponent == 0) {
-            return 1;
-        } else if(exponent < 0) {
-            multiplier = 1 / multiplier;
-        }
-        double result = base;
-        for(int i = 0; i < exponent; i++) {
+        double result = 1;
+        for(int i = 0; i < abs(exponent); i++) {
             result *= base;
         }
-        return result;
+        return exponent < 0 ? 1.0 / result : result;
+    }
+
+    // returns absolute value of number
+    public static double abs(double num) {
+        return num < 0 ? -num : num;
     }
 
     // returns int n-digits from right of given integer
