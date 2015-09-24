@@ -6,8 +6,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Simple Algorithms Lab for AP Computer Science.
- * A CLI-based program for executing simple mathematical
+ * Lab 2: Simple Algorithms
+ * A CLI-based program for executing various mathematical
  * functions.
  * Written by Stefan Kussmaul, September 2015 (H Block)
  */
@@ -99,13 +99,17 @@ public class Main {
                     startTime = System.currentTimeMillis();
                     System.out.println(digit + "th digit from right is " + MathUtil.findDigit(num, digit));
                     break;
+                case 8:
+                    System.out.print("Exiting program...");
+                    System.exit(0);
+                    break;
                 default:
                     System.out.println("Error: invalid choice");
                     success = false;
                     break;
             }
         } while(!success);
-        endTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis(); // endTime is redundant
         if(success) { // redundant to check
             System.out.println("Ran in " + (endTime - startTime) + "ms\n");
         }
