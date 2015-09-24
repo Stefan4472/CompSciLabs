@@ -6,10 +6,11 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Lab 2: Simple Algorithms
- * A CLI-based program for executing various mathematical
- * functions.
- * Written by Stefan Kussmaul, September 2015 (H Block)
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 9/24/15
+ * Lab: 1
+ * Title: Simple Algorithms
+ * Purpose: A CLI-based program for executing various mathematical functions.
  */
 public class Main {
 
@@ -31,14 +32,14 @@ public class Main {
 
     private static void printMainMenu() {
         System.out.print(
-            "1. Factor a Number\n" +
-            "2. Calculate GCD\n" +
-            "3. Check Prime\n" +
-            "4. Calculate Exponent\n" +
-            "5. Find Digit in Number\n" +
-            "6. Print Digits of Number\n" +
-            "7. Count Digits in Number\n" +
-            "8. Exit Program\n"
+                "1. Factor a Number\n" +
+                        "2. Calculate GCD\n" +
+                        "3. Check Prime\n" +
+                        "4. Calculate Exponent\n" +
+                        "5. Find Digit in Number\n" +
+                        "6. Print Digits of Number\n" +
+                        "7. Count Digits in Number\n" +
+                        "8. Exit Program\n"
         );
     }
 
@@ -55,37 +56,48 @@ public class Main {
 
     // takes menu choice and calls proper algorithm
     private static void executeFunction(int menuChoice) {
-        boolean success = true;
+        boolean success;
         do {
+            success = true;
             switch (menuChoice) {
                 case 1:
                     System.out.print("Enter a number to be factored: ");
                     int num = scanner.nextInt();
-                    startTime = System.currentTimeMillis();
-                    MathUtil.printFactors(num);
+                    if(num < 0) {
+                        System.out.println("Error: number must be positive\n");
+                        success = false;
+                    } else {
+                        startTime = System.currentTimeMillis();
+                        MathUtil.printFactors(num);
+                    }
                     break;
                 case 2:
                     System.out.print("Enter a: ");
                     int a = scanner.nextInt();
                     System.out.print("Enter b: ");
                     int b = scanner.nextInt();
-                    if (a < 0 || b < 0) {
+                    if (a < 1 || b < 1) {
                         System.out.println("Error: a and b must be positive\n");
                         success = false;
                     } else {
                         startTime = System.currentTimeMillis();
-                        System.out.println("GCD of " + a + " and " + b + " is " + MathUtil.GCD(a, b));
+                        System.out.println("The GCD of " + a + " and " + b + " is " + MathUtil.GCD(a, b));
                     }
                     break;
                 case 3:
                     System.out.print("Enter a number to be checked: ");
-                    int num = scanner.nextInt();
-                    startTime = System.currentTimeMillis();
-                    System.out.println(num + " is " + (MathUtil.prime(num) ? "" : "not ") + "prime");
+                    num = scanner.nextInt();
+                    if(num < 1) {
+                        System.out.println("Error: number must be greater than zero\n");
+                        success = false;
+                    } else {
+                        startTime = System.currentTimeMillis();
+                        System.out.println(num + " is " + (MathUtil.prime(num) ? "" : "not ") + "prime");
+                    }
                     break;
                 case 4:
                     System.out.print("Enter base: ");
-                    int base = scanner.nextInt();
+                    double base = scanner.nextDouble();
                     System.out.print("Enter exponent: ");
                     int exponent = scanner.nextInt();
                     startTime = System.currentTimeMillis();
@@ -93,11 +105,28 @@ public class Main {
                     break;
                 case 5:
                     System.out.print("Enter number: ");
-                    int num = scanner.nextInt();
+                    num = scanner.nextInt();
                     System.out.print("Enter digit to find: ");
                     int digit = scanner.nextInt();
                     startTime = System.currentTimeMillis();
-                    System.out.println(digit + "th digit from right is " + MathUtil.findDigit(num, digit));
+                    System.out.println("Digit #" + digit + " from right is " + MathUtil.findDigit(num, digit));
+                    break;
+                case 6:
+                    System.out.print("Enter number: ");
+                    num = scanner.nextInt();
+                    if(num < 0) {
+                        System.out.println("Error: number must be positive\n");
+                        success = false;
+                    } else {
+                        startTime = System.currentTimeMillis();
+                        MathUtil.downDigits(num);
+                    }
+                    break;
+                case 7:
+                    System.out.print("Enter number: ");
+                    double d = scanner.nextDouble();
+                    startTime = System.currentTimeMillis();
+                    System.out.println(d + " has " + MathUtil.countDigits(d) + " digit(s)");
                     break;
                 case 8:
                     System.out.print("Exiting program...");
@@ -109,9 +138,7 @@ public class Main {
                     break;
             }
         } while(!success);
-        endTime = System.currentTimeMillis(); // endTime is redundant
-        if(success) { // redundant to check
-            System.out.println("Ran in " + (endTime - startTime) + "ms\n");
-        }
+        endTime = System.currentTimeMillis();
+        System.out.println("Ran in " + (endTime - startTime) + "ms\n");
     }
 }
