@@ -14,8 +14,8 @@ import java.util.Scanner;
  */
 public class Main {
 
-    private static final Scanner scanner = new Scanner(System.in);
-    private static long startTime;
+    public static final Scanner scanner = new Scanner(System.in);
+    public static long startTime;
     private static long endTime;
 
     public static void main(String[] args) {
@@ -67,7 +67,6 @@ public class Main {
                         System.out.println("Error: number must be positive\n");
                         success = false;
                     } else {
-                        startTime = System.currentTimeMillis();
                         MathUtil.printFactors(num);
                     }
                     break;
@@ -80,7 +79,6 @@ public class Main {
                         System.out.println("Error: a and b must be positive\n");
                         success = false;
                     } else {
-                        startTime = System.currentTimeMillis();
                         System.out.println("The GCD of " + a + " and " + b + " is " + MathUtil.GCD(a, b));
                     }
                     break;
@@ -91,7 +89,6 @@ public class Main {
                         System.out.println("Error: number must be greater than zero\n");
                         success = false;
                     } else {
-                        startTime = System.currentTimeMillis();
                         System.out.println(num + " is " + (MathUtil.prime(num) ? "" : "not ") + "prime");
                     }
                     break;
@@ -100,7 +97,6 @@ public class Main {
                     double base = scanner.nextDouble();
                     System.out.print("Enter exponent: ");
                     int exponent = scanner.nextInt();
-                    startTime = System.currentTimeMillis();
                     System.out.println(base + "^" + exponent + " = " + MathUtil.power(base, exponent));
                     break;
                 case 5:
@@ -108,7 +104,6 @@ public class Main {
                     num = scanner.nextInt();
                     System.out.print("Enter digit to find: ");
                     int digit = scanner.nextInt();
-                    startTime = System.currentTimeMillis();
                     System.out.println("Digit #" + digit + " from right is " + MathUtil.findDigit(num, digit));
                     break;
                 case 6:
@@ -118,14 +113,12 @@ public class Main {
                         System.out.println("Error: number must be positive\n");
                         success = false;
                     } else {
-                        startTime = System.currentTimeMillis();
                         MathUtil.downDigits(num);
                     }
                     break;
                 case 7:
                     System.out.print("Enter number: ");
                     double d = scanner.nextDouble();
-                    startTime = System.currentTimeMillis();
                     System.out.println(d + " has " + MathUtil.countDigits(d) + " digit(s)");
                     break;
                 case 8:
