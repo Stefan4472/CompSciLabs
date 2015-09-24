@@ -45,95 +45,68 @@ public class Main {
     // parses user input, handles any errors,
     // and starts specified function
     private static void handleInput() {
-        try {
-            int choice = scanner.nextInt();
-            if (choice < 1 || choice > 8) {
-                System.out.println("Error: choice must be in range 1 - 8 inclusive\n");
-            } else {
-                executeFunction(choice);
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("Error: an invalid number was entered\n");
+        int choice = scanner.nextInt();
+        if (choice < 1 || choice > 8) {
+            System.out.println("Error: choice must be in range 1 - 8 inclusive\n");
+        } else {
+            executeFunction(choice);
         }
     }
 
-    // takes *handled* menu choice and calls proper algorithm
+    // takes menu choice and calls proper algorithm
     private static void executeFunction(int menuChoice) {
-        boolean success = false;
-        while(!success) {
+        boolean success = true;
+        do {
             switch (menuChoice) {
                 case 1:
-                    try {
-                        System.out.print("Enter a number to be factored: ");
-                        int num = scanner.nextInt();
-                        startTime = System.currentTimeMillis();
-                        MathUtil.printFactors(num);
-                        success = true;
-                    } catch (InputMismatchException e) {
-                        System.out.println("Error: an invalid number was entered");
-                    }
+                    System.out.print("Enter a number to be factored: ");
+                    int num = scanner.nextInt();
+                    startTime = System.currentTimeMillis();
+                    MathUtil.printFactors(num);
                     break;
                 case 2:
-                    try {
-                        System.out.print("Enter a: ");
-                        int a = scanner.nextInt();
-                        System.out.print("Enter b: ");
-                        int b = scanner.nextInt();
-                        if (a < 0 || b < 0) {
-                            System.out.println("Error: a and b must be positive\n");
-                        } else {
-                            startTime = System.currentTimeMillis();
-                            System.out.println("GCD of " + a + " and " + b + " is " + MathUtil.GCD(a, b));
-                            success = true;
-                        }
-                    } catch (InputMismatchException e) {
-                        System.out.println("Error: an invalid number was entered");
+                    System.out.print("Enter a: ");
+                    int a = scanner.nextInt();
+                    System.out.print("Enter b: ");
+                    int b = scanner.nextInt();
+                    if (a < 0 || b < 0) {
+                        System.out.println("Error: a and b must be positive\n");
+                        success = false;
+                    } else {
+                        startTime = System.currentTimeMillis();
+                        System.out.println("GCD of " + a + " and " + b + " is " + MathUtil.GCD(a, b));
                     }
                     break;
                 case 3:
-                    try {
-                        System.out.print("Enter a number to be checked: ");
-                        int num = scanner.nextInt();
-                        startTime = System.currentTimeMillis();
-                        System.out.println(num + " is " + (MathUtil.prime(num) ? "" : "not ") + "prime");
-                        success = true;
-                    } catch(InputMismatchException e) {
-                        System.out.println("Error: invalid number was entered");
-                    }
+                    System.out.print("Enter a number to be checked: ");
+                    int num = scanner.nextInt();
+                    startTime = System.currentTimeMillis();
+                    System.out.println(num + " is " + (MathUtil.prime(num) ? "" : "not ") + "prime");
                     break;
                 case 4:
-                    try {
-                        System.out.print("Enter base: ");
-                        int base = scanner.nextInt();
-                        System.out.print("Enter exponent: ");
-                        int exponent = scanner.nextInt();
-                        startTime = System.currentTimeMillis();
-                        System.out.println(base + "^" + exponent + " = " + MathUtil.power(base, exponent));
-                        success = true;
-                    } catch(InputMismatchException e) {
-                        System.out.println("Error: invalid number was entered");
-                    }
+                    System.out.print("Enter base: ");
+                    int base = scanner.nextInt();
+                    System.out.print("Enter exponent: ");
+                    int exponent = scanner.nextInt();
+                    startTime = System.currentTimeMillis();
+                    System.out.println(base + "^" + exponent + " = " + MathUtil.power(base, exponent));
                     break;
                 case 5:
-                    try {
-                        System.out.print("Enter number: ");
-                        int num = scanner.nextInt();
-                        System.out.print("Enter digit to find: ");
-                        int digit = scanner.nextInt();
-                        startTime = System.currentTimeMillis();
-                        System.out.println(digit + "th digit from right is " + MathUtil.findDigit(num, digit));
-                        success = true;
-                    } catch(InputMismatchException e) {
-                        System.out.println("Error: invalid number was entered");
-                    }
+                    System.out.print("Enter number: ");
+                    int num = scanner.nextInt();
+                    System.out.print("Enter digit to find: ");
+                    int digit = scanner.nextInt();
+                    startTime = System.currentTimeMillis();
+                    System.out.println(digit + "th digit from right is " + MathUtil.findDigit(num, digit));
                     break;
                 default:
                     System.out.println("Error: invalid choice");
+                    success = false;
                     break;
             }
-        }
+        } while(!success);
         endTime = System.currentTimeMillis();
-        if(success) {
+        if(success) { // redundant to check
             System.out.println("Ran in " + (endTime - startTime) + "ms\n");
         }
     }
