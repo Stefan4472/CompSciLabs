@@ -52,14 +52,14 @@ public class MathUtil {
     }
 
     // returns whether given integer is prime
-    public static boolean prime(int num) {
-        if(num == 0) {
+    public static boolean prime(int num) { // todo: will 2 be prime? or 3?
+        if(num == 0) { // todo: cyclotomic AKS test
             return false;
         } else {
             if(num < 0) {
                 num *= -1;
             }
-            for(int i = 2; i < squareRoot(num); i++) { // todo: squareroot function
+            for(int i = 2; i < squareRoot(num); i++) { // todo: squareroot function // todo: while loop, i x i <= num, exclude even numbers
                 if(divides(num, i)) {
                     return false;
                 }
