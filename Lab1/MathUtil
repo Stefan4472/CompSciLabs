@@ -6,6 +6,7 @@
  * Purpose: A CLI-based program for executing various mathematical functions.
  */
 public class MathUtil {
+
     /* The divides and countDigits methods were written first so that
     they could be used in other methods. */
 
@@ -20,6 +21,7 @@ public class MathUtil {
 
     // prints all factors of given positive integer
     public static void printFactors(int num) {
+        Main.startTime = System.currentTimeMillis();
         System.out.print("The factors of " + num + " are: ");
         for(int i = 0; i < num; i++) {
             if(divides(num, i)) {
@@ -31,6 +33,7 @@ public class MathUtil {
 
     // returns greatest common divisor of a and b
     public static int GCD(int a, int b) {
+        Main.startTime = System.currentTimeMillis();
         int smaller, larger, gcd = 1;
         if(a < b) { // todo: a == b?
             smaller = a;
@@ -48,20 +51,15 @@ public class MathUtil {
     }
 
     // returns whether given integer is prime
-    public static boolean prime(int num) { // todo: will 2 be prime? or 3?
-        if(num == 0) { // todo: cyclotomic AKS test
-            return false;
-        } else {
-            if(num < 0) {
-                num *= -1;
+    public static boolean prime(int num) {
+        Main.startTime = System.currentTimeMillis();
+        int sqr_root = squareRoot(num);
+        for(int i = 2; i < sqr_root; i++) { // todo: squareroot function // todo: while loop, i x i <= num, exclude even numbers
+            if(divides(num, i)) {
+                return false;
             }
-            for(int i = 2; i < squareRoot(num); i++) { // todo: squareroot function // todo: while loop, i x i <= num, exclude even numbers
-                if(divides(num, i)) {
-                    return false;
-                }
-            }
-            return true;
         }
+        return true;
     }
 
     // returns squareroot of given int provided it is positive
@@ -79,6 +77,7 @@ public class MathUtil {
 
     // returns base raised to the power exponent
     public static double power(double base, int exponent) {
+        Main.startTime = System.currentTimeMillis();
         double result = 1;
         for(int i = 0; i < abs(exponent); i++) {
             result *= base;
@@ -93,6 +92,7 @@ public class MathUtil {
 
     // returns int n-digits from right of given integer
     public static int findDigit(int num, int n) {
+        Main.startTime = System.currentTimeMillis();
         int result = num % (int) power(10, n);
         for(int i = 0; i < n - 1; i++) {
             result /= 10;
@@ -101,6 +101,7 @@ public class MathUtil {
     }
 
     public static void downDigits(int num) {
+        Main.startTime = System.currentTimeMillis();
         System.out.println("The digits of " + num + " are:");
         for(int i = countDigits(num); i > 0; i--) {
             System.out.println(findDigit(num, i));
@@ -109,6 +110,7 @@ public class MathUtil {
 
     // returns the number of digits in int
     public static int countDigits(double num) {
+        Main.startTime = System.currentTimeMillis();
         int divided = (int) num / 10;
         int digits = 1;
         while(divided > 0) {
