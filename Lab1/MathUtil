@@ -1,8 +1,13 @@
 /**
- * Simple Algorithms Lab for AP Computer Science
- * Written by Stefan Kussmaul September 2015
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 9/24/15
+ * Lab: 1
+ * Title: Simple Algorithms
+ * Purpose: A CLI-based program for executing various mathematical functions.
  */
 public class MathUtil {
+    /* The divides and countDigits methods were written first so that
+    they could be used in other methods. */
 
     // returns whether dividend can be cleanly divided by divisor
     // i.e. without a decimal remainder
@@ -15,40 +20,31 @@ public class MathUtil {
 
     // prints all factors of given positive integer
     public static void printFactors(int num) {
-        if(num < 1) {
-            System.out.println("Error: Cannot factor. Input must be an integer greater than zero");
-        } else {
-            System.out.print("The factors of " + num + " are: ");
-            for(int i = 0; i < num; i++) {
-                if(divides(num, i)) {
-                    System.out.print(i + ", ");
-                }
+        System.out.print("The factors of " + num + " are: ");
+        for(int i = 0; i < num; i++) {
+            if(divides(num, i)) {
+                System.out.print(i + ", ");
             }
-            System.out.println(num + ".");
         }
+        System.out.println(num + ".");
     }
 
     // returns greatest common divisor of a and b
     public static int GCD(int a, int b) {
-        if(a < 0 || b < 0) {
-            System.out.println("Error: GCD requires positive parameters");
-            return 0;
+        int smaller, larger, gcd = 1;
+        if(a < b) { // todo: a == b?
+            smaller = a;
+            larger = b;
         } else {
-            int smaller, larger, gcd = 1;
-            if(a < b) { // todo: a == b?
-                smaller = a;
-                larger = b;
-            } else {
-                smaller = b;
-                larger = a;
-            }
-            for(int i = 2; i <= smaller; i++) {
-                if(divides(smaller, i) && divides(larger, i)) {
-                    gcd = i;
-                }
-            }
-            return gcd;
+            smaller = b;
+            larger = a;
         }
+        for(int i = 2; i <= smaller; i++) {
+            if(divides(smaller, i) && divides(larger, i)) {
+                gcd = i;
+            }
+        }
+        return gcd;
     }
 
     // returns whether given integer is prime
@@ -101,24 +97,22 @@ public class MathUtil {
         for(int i = 0; i < n - 1; i++) {
             result /= 10;
         }
-        return result;
+        return (int) abs(result);
     }
 
     public static void downDigits(int num) {
-        if(num < 0) {
-            num *= -1;
-        }
+        System.out.println("The digits of " + num + " are:");
         for(int i = countDigits(num); i > 0; i--) {
             System.out.println(findDigit(num, i));
         }
     }
 
     // returns the number of digits in int
-    public static int countDigits(int num) {
-        num /= 10;
+    public static int countDigits(double num) {
+        int divided = (int) num / 10;
         int digits = 1;
-        while(num > 0) { // todo: will in be 0?
-            num /= 10;
+        while(divided > 0) {
+            divided /= 10;
             digits++;
         }
         return digits;
