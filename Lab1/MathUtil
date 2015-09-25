@@ -7,12 +7,12 @@
  */
 public class MathUtil {
 
-    /* The divides method was written first, because of its usefullness
-    in the factoring, GCF, and prime methods. Methods like abs and 
-    squareRoot were written to support other methods, or to attempt 
-    optimizing algorithms (although they are not as efficient as
-    they theoretically could be). Then findDigit and countDigits were
-    written, so they could be used in downDigits. */
+    /* The divides method was written first, because of its usefulness
+        in the factoring, GCF, and prime methods. Methods like abs and
+        squareRoot were written to support other methods, or to attempt
+        optimizing algorithms (although they are not as efficient as
+        they theoretically could be). Then findDigit and countDigits were
+        written, so they could be used in downDigits. */
 
     // returns whether dividend can be cleanly divided by divisor
     // i.e. without a decimal remainder
@@ -39,7 +39,7 @@ public class MathUtil {
     public static int GCD(int a, int b) {
         Main.startTime = System.currentTimeMillis();
         int smaller, larger, gcd = 1;
-        if(a < b) { // todo: a == b?
+        if(a < b) {
             smaller = a;
             larger = b;
         } else {
@@ -57,6 +57,9 @@ public class MathUtil {
     // returns whether given integer is prime
     public static boolean prime(int num) {
         Main.startTime = System.currentTimeMillis();
+        if(num % 2 == 0 || num % 3 == 0 || num % 5 == 0) {
+            return false;
+        }
         int sqr_root = squareRoot(num);
         for(int i = 2; i < sqr_root; i++) { // todo: squareroot function // todo: while loop, i x i <= num, exclude even numbers
             if(divides(num, i)) {
