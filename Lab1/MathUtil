@@ -7,8 +7,12 @@
  */
 public class MathUtil {
 
-    /* The divides and countDigits methods were written first so that
-    they could be used in other methods. */
+    /* The divides method was written first, because of its usefullness
+    in the factoring, GCF, and prime methods. Methods like abs and 
+    squareRoot were written to support other methods, or to attempt 
+    optimizing algorithms (although they are not as efficient as
+    they theoretically could be). Then findDigit and countDigits were
+    written, so they could be used in downDigits. */
 
     // returns whether dividend can be cleanly divided by divisor
     // i.e. without a decimal remainder
