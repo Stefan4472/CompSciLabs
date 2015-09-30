@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -10,18 +11,49 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Welcome to Middle Earth!\n");
         for(int i = 0; i < 10; i++) {
-            printMainMenu();
+            System.out.print("Enter race: ");
+            int base = getBase();
+            System.out.print("Enter number: ");
+            String num1 = scanner.next();
+            System.out.print("Enter number 2: ");
+            String num2 = scanner.next();
+            System.out.print("Enter operation: ");
+            String operation = scanner.next();
+            String result = calculate(BaseUtil.toBase10(num1, base),
+                    BaseUtil.toBase10(num2, base), operation, base);
+            System.out.println("\n" + num1 + "\n" + operation + " " + num2 + "\n====" + "\n" + result + "\n");
         }
     }
 
-    private static void printMainMenu() {
-        System.out.print("Enter race: ");
-        String race = scanner.next();
-        System.out.print("Enter number: ");
-        String num1 = scanner.next();
-        System.out.print("Enter number 2: ");
-        String num2 = scanner.next();
-        System.out.print("Enter operation: ");
-        String operation = scanner.next();
+    private static int getBase() throws NumberFormatException {
+        switch(scanner.next()) {
+            case "human":
+            case "Human":
+                return 10;
+            case "elf":
+            case "Elf":
+                return 8;
+            case "dwarf":
+            case "Dwarf":
+                return 5;
+            case "wizard":
+            case "Wizard":
+                return 2;
+            default:
+                throw new NumberFormatException();
+        }
+    }
+
+    // takes two base ten numbers, executes operation and returns in toBase
+    private static String calculate(int num1, int num2,
+                String operation, int toBase) throws InputMismatchException {
+        String result = "";
+        if(operation.equals("*")) {
+            return BaseUtil.fromBase10(num1 * num2, toBase);
+        } else if(operation.equals("+")) {
+            return BaseUtil.fromBase10(num1 + num2, toBase);
+        } else {
+            throw new InputMismatchException();
+        }
     }
 }
