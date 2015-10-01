@@ -12,7 +12,7 @@ public class Main {
         System.out.println("Welcome to Middle Earth!\n");
         for(int i = 0; i < 10; i++) {
             System.out.print("Enter race: ");
-            int base = getBase();
+            int base = getBase(scanner.next());
             System.out.print("Enter number: ");
             String num1 = scanner.next();
             System.out.print("Enter number 2: ");
@@ -21,18 +21,20 @@ public class Main {
             String operation = scanner.next();
             int result = calculate(BaseUtil.toBase10(num1, base),
                     BaseUtil.toBase10(num2, base), operation);
+            String result_output = BaseUtil.fromBase10(result, base);
+
             System.out.println(
-                "\n" +
-                num1 + "\n" +
-                operation + " " + num2 + "\n" +
-                "====" + "\n" +
-                BaseUtil.fromBase10(result, base) + "\n"
+                rightJustify(num1, result_output.length()) + "\n" +
+                operation + rightJustify(num2, result_output.length() - 1) + "\n" +
+                generateLine(result_output.length()) + "\n" +
+                result_output + "\n"
             );
         }
     }
 
-    private static int getBase() throws NumberFormatException {
-        switch(scanner.next()) {
+    // returns base given race
+    private static int getBase(String race) throws InputMismatchException {
+        switch(race) {
             case "human":
             case "Human":
                 return 10;
@@ -46,19 +48,46 @@ public class Main {
             case "Wizard":
                 return 2;
             default:
-                throw new NumberFormatException();
+                throw new InputMismatchException("Unsupported Race (" + race + ")");
         }
     }
 
     // takes two base ten numbers and operation
     private static int calculate(int num1, int num2,
                 String operation) throws InputMismatchException {
-        if(operation.equals("*")) {
-            return num1 * num2;
-        } else if(operation.equals("+")) {
-            return num1 + num2;
-        } else {
-            throw new InputMismatchException();
+        switch(operation) {
+            case "*":
+                return num1 * num2;
+            case "+":
+                return num1 + num2;
+            case "/":
+                return num1 / num2;
+            case "-":
+                return num1 - num2;
+            case "^":
+                return (int) BaseUtil.pow(num1, num2);
+            default:
+                throw new InputMismatchException("Unsupported Operation (" + operation + ")");
         }
+    }
+
+    // generates a String of specified length containing
+    // repeating equal signs
+    private static String generateLine(int length) {
+        String result = "";
+        for(int i = 0; i < length; i++) {
+            result += "=";
+        }
+        return result;
+    }
+
+    // generates and returns a String of specified length
+    // with String right justified
+    private static String rightJustify(String s, int columnWidth) {
+        String result = "";
+        for(int i = 0; i < columnWidth - s.length(); i++) {
+            result += " ";
+        }
+        return result + s;
     }
 }
