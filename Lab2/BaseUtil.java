@@ -6,14 +6,16 @@ import java.util.List;
  */
 public class BaseUtil {
 
-    // look up table where index of char is value of char
+    // look up table for digit to base 10 value and base 10 value to digit
     private static List<Character> values =
             Arrays.asList(new Character[] {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'});
 
     // takes a String representing a number in fromBase
-    // and returns in base 10
-    public static int toBase10(String num1, int fromBase) {
+    // and returns value in base 10
+    public static int toBase10(String num1, int fromBase) { // todo: decimals
         int base10 = 0;
+        // move from right to left
+        // convert digit to base 10 and multiply by base to the power digit index
         for(int i = num1.length() - 1, j = 0; i >= 0; i--, j++) {
             base10 += lookUpValue(num1.charAt(i)) * pow(fromBase, j);
         }
@@ -23,7 +25,7 @@ public class BaseUtil {
     // converts number from base 10 into specified base
     public static String fromBase10(int base10, int newBase) {
         String result = "";
-        do {
+        do { // use remainder method
             int remainder = base10 % newBase;
             base10 /= newBase;
             result = getDigit(remainder) + result;
@@ -31,12 +33,12 @@ public class BaseUtil {
         return result;
     }
 
-    // looks up value of digit
+    // look up base 10 value given digit
     private static int lookUpValue(char digit) {
         return values.indexOf(digit);
     }
 
-    // returns digit given value
+    // look up digit given base 10 value
     private static char getDigit(int value) {
         return values.get(value);
     }
