@@ -12,12 +12,19 @@ public class BaseUtil {
 
     // takes a String representing a number in fromBase
     // and returns value in base 10
-    public static int toBase10(String num1, int fromBase) { // todo: decimals
+    public static int toBase10(String num1, int fromBase) throws NumberFormatException { // todo: decimals
         int base10 = 0;
+        boolean decimal_point = false;
         // move from right to left
         // convert digit to base 10 and multiply by base to the power digit index
         for(int i = num1.length() - 1, j = 0; i >= 0; i--, j++) {
-            base10 += lookUpValue(num1.charAt(i)) * pow(fromBase, j);
+            if(num1.charAt(i) == '.') {
+                decimal_point = true;
+            } else if(lookUpValue(num1.charAt(i)) >= fromBase) { // check base makes sense
+                throw new NumberFormatException("Number does not match base");
+            } else {
+                base10 += lookUpValue(num1.charAt(i)) * pow(fromBase, j);
+            }
         }
         return base10;
     }
