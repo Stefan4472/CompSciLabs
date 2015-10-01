@@ -19,9 +19,15 @@ public class Main {
             String num2 = scanner.next();
             System.out.print("Enter operation: ");
             String operation = scanner.next();
-            String result = calculate(BaseUtil.toBase10(num1, base),
-                    BaseUtil.toBase10(num2, base), operation, base);
-            System.out.println("\n" + num1 + "\n" + operation + " " + num2 + "\n====" + "\n" + result + "\n");
+            int result = calculate(BaseUtil.toBase10(num1, base),
+                    BaseUtil.toBase10(num2, base), operation);
+            System.out.println(
+                "\n" +
+                num1 + "\n" +
+                operation + " " + num2 + "\n" +
+                "====" + "\n" +
+                BaseUtil.fromBase10(result, base) + "\n"
+            );
         }
     }
 
@@ -44,14 +50,13 @@ public class Main {
         }
     }
 
-    // takes two base ten numbers, executes operation and returns in toBase
-    private static String calculate(int num1, int num2,
-                String operation, int toBase) throws InputMismatchException {
-        String result = "";
+    // takes two base ten numbers and operation
+    private static int calculate(int num1, int num2,
+                String operation) throws InputMismatchException {
         if(operation.equals("*")) {
-            return BaseUtil.fromBase10(num1 * num2, toBase);
+            return num1 * num2;
         } else if(operation.equals("+")) {
-            return BaseUtil.fromBase10(num1 + num2, toBase);
+            return num1 + num2;
         } else {
             throw new InputMismatchException();
         }
