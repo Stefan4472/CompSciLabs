@@ -1,137 +1,137 @@
+//package stefankussmaul.lab1;
+
+import com.sun.tools.doclets.internal.toolkit.util.DocFinder;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
  * Your name: Stefan Kussmaul
- * Class block: H				Date: 10/2/15
- * Lab: 2
- * Title: Middle Earth Based Math
- * Purpose: A CLI-based program for executing various mathematical functions
- * on numbers of different bases.
+ * Class block: H				Date: 9/24/15
+ * Lab: 1
+ * Title: Simple Algorithms
+ * Purpose: A CLI-based program for executing various mathematical functions.
  */
 public class Main {
 
-    private final static Scanner scanner = new Scanner(System.in);
+    public static final Scanner scanner = new Scanner(System.in);
+    public static long startTime;
+    private static long endTime;
 
     public static void main(String[] args) {
-        System.out.println("Welcome to Middle Earth!\n");
-        System.out.println("If you would like to run this program in a way that is efficient and elegant, hit enter.\n" +
-                "Otherwise, if you are Mr. Harris and are grading this program based on strict and inflexible guidelines, type \"injustice\" and hit enter.");
+        System.out.println("Welcome to Simple Algorithms!\n");
+        while(true) {
+            printMainMenu();
+            handleInput();
+            System.out.println();
+        }
+    }
+
+    // returns console input
+    private static String getInput() { return scanner.nextLine(); }
+
+    private static void printMainMenu() {
+        System.out.print(
+                "1. Factor a Number\n" +
+                        "2. Calculate GCD\n" +
+                        "3. Check Prime\n" +
+                        "4. Calculate Exponent\n" +
+                        "5. Find Digit in Number\n" +
+                        "6. Print Digits of Number\n" +
+                        "7. Count Digits in Number\n" +
+                        "8. Exit Program\n"
+        );
+    }
+
+    // parses user input, handles any errors,
+    // and starts specified function
+    private static void handleInput() {
+        int choice = scanner.nextInt();
+        if (choice < 1 || choice > 8) {
+            System.out.println("Error: choice must be in range 1 - 8 inclusive\n");
+        } else {
+            executeFunction(choice);
+        }
+    }
+
+    // takes menu choice and calls proper algorithm
+    private static void executeFunction(int menuChoice) {
+        boolean success;
         do {
-            String choice = scanner.nextLine();
-            if(choice.equals("")) {
-                runNormalProgram();
-            } else if(choice.equals("injustice")) {
-                System.out.println("I hope you're happy Mr. Harris\n");
-                runTesting();
-            } else {
-                System.out.println("Nope, try again");
+            success = true;
+            switch (menuChoice) {
+                case 1:
+                    System.out.print("Enter a number to be factored: ");
+                    int num = scanner.nextInt();
+                    if(num < 0) {
+                        System.out.println("Error: number must be positive\n");
+                        success = false;
+                    } else {
+                        MathUtil.printFactors(num);
+                    }
+                    break;
+                case 2:
+                    System.out.print("Enter a: ");
+                    int a = scanner.nextInt();
+                    System.out.print("Enter b: ");
+                    int b = scanner.nextInt();
+                    if (a < 1 || b < 1) {
+                        System.out.println("Error: a and b must be positive\n");
+                        success = false;
+                    } else {
+                        System.out.println("The GCD of " + a + " and " + b + " is " + MathUtil.GCD(a, b));
+                    }
+                    break;
+                case 3:
+                    System.out.print("Enter a number to be checked: ");
+                    num = scanner.nextInt();
+                    if(num < 1) {
+                        System.out.println("Error: number must be greater than zero\n");
+                        success = false;
+                    } else {
+                        System.out.println(num + " is " + (MathUtil.prime(num) ? "" : "not ") + "prime");
+                    }
+                    break;
+                case 4:
+                    System.out.print("Enter base: ");
+                    double base = scanner.nextDouble();
+                    System.out.print("Enter exponent: ");
+                    int exponent = scanner.nextInt();
+                    System.out.println(base + "^" + exponent + " = " + MathUtil.power(base, exponent));
+                    break;
+                case 5:
+                    System.out.print("Enter number: ");
+                    num = scanner.nextInt();
+                    System.out.print("Enter digit to find: ");
+                    int digit = scanner.nextInt();
+                    System.out.println("Digit #" + digit + " from right is " + MathUtil.findDigit(num, digit));
+                    break;
+                case 6:
+                    System.out.print("Enter number: ");
+                    num = scanner.nextInt();
+                    if(num < 0) {
+                        System.out.println("Error: number must be positive\n");
+                        success = false;
+                    } else {
+                        MathUtil.downDigits(num);
+                    }
+                    break;
+                case 7:
+                    System.out.print("Enter number: ");
+                    double d = scanner.nextDouble();
+                    System.out.println((int) d + " has " + MathUtil.countDigits(d) + " digit(s)");
+                    break;
+                case 8:
+                    System.out.print("Exiting program...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Error: invalid choice");
+                    success = false;
+                    break;
             }
-        } while(true);
-    }
-
-    private static void runNormalProgram() {
-        for(int i = 0; i < 10; i++) {
-            System.out.println("Input " + (i + 1) + ":");
-            int base = getBase(scanner.next());
-            String num1 = scanner.next();
-            String num2 = scanner.next();
-            String operation = scanner.next();
-            int result = calculate(BaseUtil.toBase10(num1, base),
-                    BaseUtil.toBase10(num2, base), operation);
-            String result_output = BaseUtil.fromBase10(result, base);
-
-            System.out.println(
-                    rightJustify(num1, result_output.length()) + "\n" +
-                            operation + rightJustify(num2, result_output.length() - 1) + "\n" +
-                            generateLine(result_output.length()) + "\n" +
-                            result_output + "\n"
-            );
-        }
-        System.exit(0);
-    }
-
-    private static void runTesting() {
-        for(int i = 0; i < 10; i++) {
-            System.out.println("Input " + (i + 1) + ":");
-            int base = getBase(scanner.next());
-            String num1 = scanner.next();
-            String num2 = scanner.next();
-            String operation = scanner.next();
-            System.out.println("Output " + (i + 1) + ":");
-            System.out.println(num1 + "\n" + operation + " " + num2);
-            if(operation.equals("*")) {
-                System.out.println("-----");
-                for(int j = num2.length() - 1; j >= 0; j--) {
-                    int intermediate = calculate(BaseUtil.toBase10(num1, base),
-                            BaseUtil.lookUpValue(num2.charAt(j)), operation);
-                    System.out.println(BaseUtil.fromBase10(intermediate, base));
-                }
-            }
-            System.out.println("=====");
-            int result = calculate(BaseUtil.toBase10(num1, base),
-                    BaseUtil.toBase10(num2, base), operation);
-            System.out.println(BaseUtil.fromBase10(result, base) + "\n");
-        }
-        System.exit(0);
-    }
-
-    // returns base given race
-    private static int getBase(String race) throws InputMismatchException {
-        switch(race) {
-            case "human":
-            case "Human":
-                return 10;
-            case "elf":
-            case "Elf":
-                return 8;
-            case "dwarf":
-            case "Dwarf":
-                return 5;
-            case "wizard":
-            case "Wizard":
-                return 2;
-            default:
-                throw new InputMismatchException("Unsupported Race (" + race + ")");
-        }
-    }
-
-    // takes two base ten numbers and operation
-    private static int calculate(int num1, int num2,
-                                 String operation) throws InputMismatchException {
-        switch(operation) {
-            case "*":
-                return num1 * num2;
-            case "+":
-                return num1 + num2;
-            case "/":
-                return num1 / num2;
-            case "-":
-                return num1 - num2;
-            case "^":
-                return (int) BaseUtil.pow(num1, num2);
-            default:
-                throw new InputMismatchException("Unsupported Operation (" + operation + ")");
-        }
-    }
-
-    // generates a String of specified length containing
-    // repeating equal signs
-    private static String generateLine(int length) {
-        String result = "";
-        for(int i = 0; i < length; i++) {
-            result += "=";
-        }
-        return result;
-    }
-
-    // generates and returns a String of specified length
-    // with String right justified
-    private static String rightJustify(String s, int columnWidth) {
-        String result = "";
-        for(int i = 0; i < columnWidth - s.length(); i++) {
-            result += " ";
-        }
-        return result + s;
+        } while(!success);
+        endTime = System.currentTimeMillis();
+        System.out.println("Ran in " + (endTime - startTime) + "ms\n");
     }
 }
