@@ -2,7 +2,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by lhscompsci on 9/30/15.
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 10/2/15
+ * Lab: 2
+ * Title: Middle Earth Based Math
+ * Purpose: A CLI-based program for executing various mathematical functions
+ * on numbers of different bases.
  */
 public class BaseUtil {
 
@@ -41,12 +46,12 @@ public class BaseUtil {
     }
 
     // look up base 10 value given digit
-    private static int lookUpValue(char digit) {
+    public static int lookUpValue(char digit) {
         return values.indexOf(digit);
     }
 
     // look up digit given base 10 value
-    private static char getDigit(int value) {
+    public static char getDigit(int value) {
         return values.get(value);
     }
 
@@ -64,3 +69,4 @@ public class BaseUtil {
         return num < 0 ? -num : num;
     }
 }
+    
