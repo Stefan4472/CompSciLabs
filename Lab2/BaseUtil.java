@@ -3,11 +3,11 @@ import java.util.List;
 
 /**
  * Your name: Stefan Kussmaul
- * Class block: H				Date: 10/2/15
+ * Class block: H				Date: 10/6/15
  * Lab: 2
  * Title: Middle Earth Based Math
  * Purpose: A CLI-based program for executing various mathematical functions
- * on numbers of different bases.
+ * on numbers in different bases.
  */
 public class BaseUtil {
 
@@ -69,4 +69,3 @@ public class BaseUtil {
         return num < 0 ? -num : num;
     }
 }
-    
