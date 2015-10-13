@@ -29,12 +29,20 @@ public class RecursiveUtil {
         }
         return powerOf3(num / 3);
     }
-
+    
     public static int reverse(int num) {
         if(num < 10) {
             return num;
         } else {
-            return num % 10 * (int) Math.pow(10, (int) Math.log(num)) + reverse(num / 10);
+            return num % 10 * (int) Math.pow(10, pow10(num)) + reverse(num / 10);
+        }
+    }
+
+    public static int pow10(int num) {
+        if(num / 10 == 0) {
+            return 0;
+        } else {
+            return pow10(num / 10) + 1;
         }
     }
 
