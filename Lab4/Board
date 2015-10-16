@@ -59,13 +59,32 @@ public class Board {
     }
 
     // converts x-coordinate of laser on screen to laser on board
-    private int toRealX(int x) {
+    private int laserToX(int x) {
         return x % BOARD_SIZE;
     }
-    
+
     // converts y-coordinate of laser on screen to laser on board
-    private int toRealY(int y) {
-        return y % BOARD_SIZE;   
+    private int laserToY(int y) {
+        return y % BOARD_SIZE;
+    }
+
+    // board coordinates to screen coordinates of laser
+    private int getLaser(int row, int col) {
+
+    }
+
+    public int fireLaser(int row, int col, int dirX, int dirY) {
+        if(row == -1 || row == BOARD_SIZE || col == -1 || col == BOARD_SIZE) {
+            return getLaser(row, col);
+        } else if(board[row][col] == EMPTY) {
+            return fireLaser(row + dirX, col + dirY, dirX, dirY);
+        } else if(board[row][col] == L_MIRROR || board[row][col] == L_MIRROR_R) { // left-facing mirror
+            if(dirX == RIGHT || dirX == UP) {
+                return fireLaser(row, col, dirX *= -1, dirY);
+            } else if(dirY == UP || dirY == DOWN) {
+                
+            }
+        }
     }
 
     public void displayBoard() {
