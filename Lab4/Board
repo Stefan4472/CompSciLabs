@@ -8,20 +8,20 @@ public class Board {
     private int BOARD_SIZE = 10;
     private int NUM_MIRRORS = 10;
 
-    private byte[][] board;
+    private int[][] board;
 
     // directions
-    private static final byte UP = -1;
-    private static final byte DOWN = 1;
-    private static final byte LEFT = -1;
-    private static final byte RIGHT = 1;
+    private static final int UP = -1;
+    private static final int DOWN = 1;
+    private static final int LEFT = -1;
+    private static final int RIGHT = 1;
 
     // tile ID's
-    private static final byte EMPTY = 0; // no mirror
-    private static final byte L_MIRROR = 1; // mirror facing left, not revealed
-    private static final byte L_MIRROR_R = 2; // mirror facing left, revealed
-    private static final byte R_MIRROR = 3; // mirror facing right, not revealed
-    private static final byte R_MIRROR_R = 4; // mirror facing right, revealed
+    private static final int EMPTY = 0; // no mirror
+    private static final int L_MIRROR = 1; // mirror facing left, not revealed
+    private static final int L_MIRROR_R = 2; // mirror facing left, revealed
+    private static final int R_MIRROR = 3; // mirror facing right, not revealed
+    private static final int R_MIRROR_R = 4; // mirror facing right, revealed
 
     private static final Random random = new Random();
 
@@ -30,22 +30,22 @@ public class Board {
     }
 
     private void initBoard() {
-        board = new byte[BOARD_SIZE][BOARD_SIZE];
+        board = new int[BOARD_SIZE][BOARD_SIZE];
         int placed_mirrors = 0;
         do {
             int row = random.nextInt(board.length);
             int col = random.nextInt(board[0].length);
-            if(board[row][col] == 0) {
-                board[row][col] = (random.nextInt(2) == 0 ? L_MIRROR : R_MIRROR);
+            if(board[row][col] == EMPTY) {
+                board[row][col] = (random.nextBoolean() ? L_MIRROR : R_MIRROR);
                 placed_mirrors++;
             }
         } while(placed_mirrors < NUM_MIRRORS);
     }
 
     // converts tileID to char on display
-    private static char getTile(byte tileID) throws IndexOutOfBoundsException {
+    private static char getTile(int tileID) throws IndexOutOfBoundsException {
         switch(tileID) {
-            case 0:
+            /*case 0:
             case 1:
             case 3:
                 return '.';
@@ -54,37 +54,83 @@ public class Board {
             case 4:
                 return '\\';
             default:
-                throw new IndexOutOfBoundsException("Invalid Tile ID");
+                throw new IndexOutOfBoundsException("Invalid Tile ID");*/
+            case EMPTY:
+                return '.';
+            case L_MIRROR:
+            case L_MIRROR_R:
+                return '/';
+            case R_MIRROR:
+            case R_MIRROR_R:
+                return '\\';
+            default:
+                return 'X';
         }
-    }
-
-    // converts x-coordinate of laser on screen to laser on board
-    private int laserToX(int x) {
-        return x % BOARD_SIZE;
-    }
-
-    // converts y-coordinate of laser on screen to laser on board
-    private int laserToY(int y) {
-        return y % BOARD_SIZE;
     }
 
     // board coordinates to screen coordinates of laser
-    private int getLaser(int row, int col) {
-
+    private int boardToLaser(int row, int col) {
+        if(row == 0) { // top row
+            return 2 * BOARD_SIZE + col;
+        } else if(row == BOARD_SIZE - 1) { // bottom row
+            return col;
+        } else if(col == 0) { // left column
+            return 2 * BOARD_SIZE - row;
+        } else if(col == BOARD_SIZE - 1) { // right column
+            return 3 * BOARD_SIZE + row;
+        } else {
+            return -1;
+        }
     }
 
-    public int fireLaser(int row, int col, int dirX, int dirY) {
-        if(row == -1 || row == BOARD_SIZE || col == -1 || col == BOARD_SIZE) {
-            return getLaser(row, col);
-        } else if(board[row][col] == EMPTY) {
-            return fireLaser(row + dirX, col + dirY, dirX, dirY);
+    // laser number to board coordinates and direction
+    private int[] laserToBoard(int laser) {
+        if(laser < BOARD_SIZE) { // bottom row
+            return new int[] { BOARD_SIZE - 1, laser % BOARD_SIZE, UP, 0 };
+        } else if(laser >= BOARD_SIZE && laser < BOARD_SIZE * 2) { // left column
+            return new int[] { BOARD_SIZE - laser % BOARD_SIZE, 0, 0, RIGHT };
+        } else if(laser >= 2 * BOARD_SIZE && laser < BOARD_SIZE * 3) { // top row
+            return new int[] { 0, laser % BOARD_SIZE, DOWN, 0 };
+        } else { // right column
+            return new int[] { BOARD_SIZE - 1, laser % BOARD_SIZE, 0, LEFT };
+        }
+    }
+
+    public int fireLaser(int laser) {
+        int[] info = laserToBoard(laser);
+        return fireLaser(info[0], info[1], info[2], info[3]);
+    }
+
+    public int fireLaser(int row, int col, int dirR, int dirC) {
+        if(board[row][col] == EMPTY) {
+            if(row == 0 && dirR == UP || row == BOARD_SIZE - 1 && dirR == DOWN || 
+                    col == 0 && dirC == LEFT || col == BOARD_SIZE - 1 && dirC == RIGHT) { // edge of board
+                return boardToLaser(row, col);
+            } else {
+                return fireLaser(row + dirR, col + dirC, dirR, dirC);
+            }
         } else if(board[row][col] == L_MIRROR || board[row][col] == L_MIRROR_R) { // left-facing mirror
-            if(dirX == RIGHT || dirX == UP) {
-                return fireLaser(row, col, dirX *= -1, dirY);
-            } else if(dirY == UP || dirY == DOWN) {
-                
+            if(dirR == RIGHT) {
+                return fireLaser(row + UP, col, UP, 0);
+            } else if(dirR == LEFT) {
+                return fireLaser(row + DOWN, col, DOWN, 0);
+            } else if(dirC == UP) {
+                return fireLaser(row, col + RIGHT, 0, dirC + RIGHT);
+            } else if(dirC == DOWN) {
+                return fireLaser(row, col + LEFT, 0, dirC + LEFT);
+            }
+        } else if(board[row][col] == R_MIRROR || board[row][col] == R_MIRROR_R) { // right-facing mirror
+            if(dirR == RIGHT ) {
+                return fireLaser(row + DOWN, col, DOWN, 0);
+            } else if(dirR == LEFT) {
+                return fireLaser(row + UP, col, UP, 0);
+            } else if(dirC == UP) {
+                return fireLaser(row, col + LEFT, LEFT, 0);
+            } else if(dirC == DOWN) {
+                return fireLaser(row, col + RIGHT, RIGHT, 0);
             }
         }
+        return -1;
     }
 
     public void displayBoard() {
@@ -92,6 +138,10 @@ public class Board {
         for(int i = 0; i < board.length; i++) {
             System.out.print((19 - i) + " ");
             for(int j = 0; j < board[0].length; j++) {
+                if(j == 0) {
+                    System.out.print("   ");
+
+                }
                 System.out.print(getTile(board[i][j]) + " ");
             }
             System.out.println(30 + i);
