@@ -1,0 +1,52 @@
+import java.util.Scanner;
+
+/**
+ * Created by lhscompsci on 10/15/15.
+ */
+public class Main {
+
+    private static final Scanner scanner = new Scanner(System.in);
+    private static Board board = new Board();
+
+    public static void main(String[] args) {
+        while(true) {
+            int choice = printMenu();
+            process(choice);
+        }
+    }
+
+    private static int printMenu() {
+        System.out.println(
+                "Choose:\n" +
+                "\t1. Shoot a Laser\n" +
+                "\t2. Guess at a Mirror Location\n" +
+                "\t0. Quit Game\n" +
+                "Enter Choice: "
+        );
+        return scanner.nextInt();
+    }
+
+    private static void printProgress() {
+
+    }
+
+    private static void process(int menuChoice) {
+        switch (menuChoice) {
+            case 1:
+                board.fireLaser(scanner.nextInt());
+                break;
+            case 2:
+                board.guessMirror(scanner.nextInt(), scanner.nextInt());
+                break;
+            case 3:
+                break;
+        }
+    }
+
+    private static void printBoard() {
+        System.out.println();
+        board.displayBoard();
+        System.out.println();
+        board.displayBoard();
+    }
+}
