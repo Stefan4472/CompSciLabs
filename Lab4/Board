@@ -7,6 +7,9 @@ public class Board {
 
     private int BOARD_SIZE = 10;
     private int NUM_MIRRORS = 10;
+    private int rows = 10;
+    private int cols = 10;
+    private int mirrors = 10;
 
     private int[][] board;
 
@@ -32,7 +35,16 @@ public class Board {
     public int getGuesses() { return guesses; }
     public int getCorrectGuesses() { return correctGuesses; }
     public int getShots() { return shots; }
+    public int getMirrors() { return NUM_MIRRORS; }
+
     public Board() {
+        initBoard();
+    }
+    
+    public Board(int rows, int cols, int mirrors) {
+        this.rows = rows;
+        this.cols = cols;
+        this.mirrors = mirrors;
         initBoard();
     }
 
@@ -43,7 +55,7 @@ public class Board {
             int row = random.nextInt(board.length);
             int col = random.nextInt(board[0].length);
             if (board[row][col] == EMPTY) {
-                board[row][col] = (random.nextBoolean() ? L_MIRROR : R_MIRROR);
+                board[row][col] = (random.nextBoolean() ? L_MIRROR : R_MIRROR); // todo: change
                 placed_mirrors++;
             }
         } while (placed_mirrors < NUM_MIRRORS);
@@ -52,32 +64,21 @@ public class Board {
     // converts tileID to char on display
     private static char getTile(int tileID) throws IndexOutOfBoundsException {
         switch (tileID) {
-            /*case 0:
-            case 1:
-            case 3:
-                return '.';
-            case 2:
-                return '/';
-            case 4:
-                return '\\';
-            default:
-                throw new IndexOutOfBoundsException("Invalid Tile ID");*/
             case EMPTY:
-                return '.';
             case L_MIRROR:
+            case R_MIRROR:
+                return '.';
             case L_MIRROR_R:
                 return '/';
-            case R_MIRROR:
             case R_MIRROR_R:
                 return '\\';
             default:
-                return 'X';
+                return '-';
         }
     }
 
     // board coordinates to screen coordinates of laser
     private int boardToLaser(int row, int col) {
-        System.out.println(row + "," + col);
         if (row == -1) { // top row;
             return 2 * BOARD_SIZE + col;
         } else if (row == BOARD_SIZE) { // bottom row
@@ -111,11 +112,11 @@ public class Board {
     public boolean guessMirror(int laser1, int laser2) {
         int[] board_1 = laserToBoard(laser1); // use x
         int[] board_2 = laserToBoard(laser2); // use y
-        int row, col; // todo: fix
-        if(board_1[0] == board_2[1]) {
+        int row, col;
+        if(board_1[0] == -1 || board_1[0] == BOARD_SIZE) {
             row = board_2[0];
             col = board_1[1];
-        } else if(board_1[1] == board_2[0]) {
+        } else if(board_1[1] == -1 || board_1[1] == BOARD_SIZE) {
             row = board_1[0];
             col = board_2[1];
         } else {
@@ -123,11 +124,13 @@ public class Board {
             col = -1;
         }
         guesses++;
-        boolean correct = board[row][col] != EMPTY;
-        if(correct) {
+        if(board[row][col] != EMPTY && board[row][col] != R_MIRROR_R && board[row][col] != L_MIRROR_R) {
             correctGuesses++;
+            board[row][col]++; // reveal mirror
+            return true;
+        } else {
+            return false;
         }
-        return correct;
     }
 
     public int fireLaser(int laser) {
