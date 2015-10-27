@@ -9,18 +9,21 @@ public class Main {
     private static Board board = new Board();
 
     public static void main(String[] args) {
-        while(true) {
+        while(board.getCorrectGuesses() < board.getMirrors()) {
+            System.out.println();
+            board.displayBoard();
+            System.out.println();
             int choice = printMenu();
             process(choice);
         }
     }
 
     private static int printMenu() {
-        System.out.println(
+        System.out.print(
                 "Choose:\n" +
-                "\t1. Shoot a Laser\n" +
-                "\t2. Guess at a Mirror Location\n" +
-                "\t0. Quit Game\n" +
+                "\t(1) Shoot a Laser\n" +
+                "\t(2) Guess at a Mirror Location\n" +
+                "\t(0) Quit Game\n" +
                 "Enter Choice: "
         );
         return scanner.nextInt();
@@ -33,10 +36,21 @@ public class Main {
     private static void process(int menuChoice) {
         switch (menuChoice) {
             case 1:
-                board.fireLaser(scanner.nextInt());
+                System.out.print("Enter laser number to fire: ");
+                int exit_laser = board.fireLaser(scanner.nextInt());
+                System.out.println("Laser " + exit_laser + " hit");
+                if(board.getShots() != 1)
+                    System.out.println(board.getShots() + " total lasers fired\n");
                 break;
             case 2:
-                board.guessMirror(scanner.nextInt(), scanner.nextInt());
+                System.out.print("Guess at location using two mirrors: ");
+                if(board.guessMirror(scanner.nextInt(), scanner.nextInt())) {
+                    System.out.println("Mirror found. Revealing location on board.\n");
+                } else {
+                    System.out.println("Guess is incorrect\n");
+                }
+                System.out.println(board.getCorrectGuesses() +
+                        " correct out of " + board.getGuesses() + " guess(es) made\n");
                 break;
             case 3:
                 break;
@@ -44,8 +58,6 @@ public class Main {
     }
 
     private static void printBoard() {
-        System.out.println();
-        board.displayBoard();
         System.out.println();
         board.displayBoard();
     }
