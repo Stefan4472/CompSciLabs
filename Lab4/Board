@@ -65,12 +65,14 @@ public class Board {
     private static char getTile(int tileID) throws IndexOutOfBoundsException {
         switch (tileID) {
             case EMPTY:
-            case L_MIRROR:
-            case R_MIRROR:
+
+
                 return '.';
+            case L_MIRROR:
             case L_MIRROR_R:
                 return '/';
             case R_MIRROR_R:
+            case R_MIRROR:
                 return '\\';
             default:
                 return '-';
@@ -178,14 +180,15 @@ public class Board {
     }
 
     public void displayBoard() {
-        // establish how much space to give each number along rows and cols
-        int row_spacing = numDigits(cols + rows);
-        int col_spacing = numDigits(cols) + 1;
+        // establish how much space to give each number labeling rows and cols
+        int row_spacing = numDigits(cols + rows - 1);
+        int col_spacing = numDigits(cols * 2 + rows);
+        System.out.println(row_spacing + "," + col_spacing);
 
         // print top numbers
         for(int i = 0; i < cols; i++) {
             if(i == 0) {
-                System.out.print(cloneString(" ", row_spacing));
+                System.out.print(cloneString(" ", row_spacing + 1));
             }
             System.out.print(String.format("%-" + col_spacing + "s", cols + rows + i));
         }
@@ -193,19 +196,20 @@ public class Board {
 
         // print body
         for(int i = 0; i < rows; i++) {
-            System.out.print((rows + cols - 1 - i) + " ");
+            System.out.print(String.format("%" + col_spacing + "s", (rows + cols - 1 - i)));
             for(int j = 0; j < cols; j++) {
-                System.out.print(getTile(board[i][j]) + " ");
+                System.out.print(centerChar(getTile(board[i][j]), col_spacing));
             }
-            System.out.println(30 + i);
+            System.out.println(" " + (2 * cols + rows + i));
         }
 
         // print bottom numbers
         for(int i = 0; i < cols; i++) {
             if(i == 0) {
-                System.out.print(cloneString(" ", row_spacing));
+                System.out.print(cloneString(" ", row_spacing + 1));
             }
             System.out.print(String.format("%-" + col_spacing + "s", i));
+            //System.out.print(centerString(Integer.toString(i), col_spacing));
         }
         System.out.println(cloneString(" ", row_spacing));
     }
@@ -225,5 +229,32 @@ public class Board {
             cloned += toClone;
         }
         return cloned;
+    }
+
+    // simple center method
+    public static String centerChar(char toCenter, int length) {
+        String centered = "";
+        for(int i = 0; i < length; i++) {
+            if(i == length / 2) {
+                centered += toCenter;
+            } else {
+                centered += " ";
+            }
+        }
+        return centered;
+    }
+
+    public static String centerString(String toCenter, int length) { //   hello    // (11 - 5) / 2  // (length - toCenter.length()) / 2
+        String centered = "";
+        int start_index = (length - toCenter.length()) / 2;
+        for(int i = 0; i < length; i++) {
+            if(i == start_index) {
+                centered += toCenter;
+                i += toCenter.length();
+            } else {
+                centered += " ";
+            }
+        }
+        return centered;
     }
 }
