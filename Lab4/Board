@@ -5,8 +5,6 @@ import java.util.Random;
  */
 public class Board {
 
-    private int BOARD_SIZE = 10;
-    private int NUM_MIRRORS = 10;
     private int rows = 10;
     private int cols = 10;
     private int mirrors = 10;
@@ -35,7 +33,7 @@ public class Board {
     public int getGuesses() { return guesses; }
     public int getCorrectGuesses() { return correctGuesses; }
     public int getShots() { return shots; }
-    public int getMirrors() { return NUM_MIRRORS; }
+    public int getMirrors() { return mirrors; }
 
     public Board() {
         initBoard();
@@ -65,14 +63,12 @@ public class Board {
     private static char getTile(int tileID) throws IndexOutOfBoundsException {
         switch (tileID) {
             case EMPTY:
-
-
-                return '.';
+            case R_MIRROR:
             case L_MIRROR:
+                return '.';
             case L_MIRROR_R:
                 return '/';
             case R_MIRROR_R:
-            case R_MIRROR:
                 return '\\';
             default:
                 return '-';
@@ -97,13 +93,13 @@ public class Board {
     // laser number to board coordinates and direction to fire laser
     private int[] laserToBoard(int laser) {
         if(laser < cols) { // bottom row
-            return new int[] { BOARD_SIZE , laser, UP, 0 };
+            return new int[] { rows , laser, UP, 0 };
         } else if(laser >= cols && laser < cols + rows) { // left column
-            return new int[] { BOARD_SIZE - laser % BOARD_SIZE - 1, -1, 0, RIGHT };
+            return new int[] { rows - laser % rows - 1, -1, 0, RIGHT };
         } else if(laser >= cols + rows && laser < 2 * cols + rows) { // top row
-            return new int[] { -1, laser % BOARD_SIZE, DOWN, 0 };
+            return new int[] { -1, laser % rows, DOWN, 0 };
         } else if(laser >= 2 * cols + rows && laser < 2 * cols + 2 * rows){ // right column
-            return new int[] { laser % BOARD_SIZE, BOARD_SIZE, 0, LEFT };
+            return new int[] { laser % rows, rows, 0, LEFT };
         } else {
             return null;
         }
@@ -182,21 +178,20 @@ public class Board {
     public void displayBoard() {
         // establish how much space to give each number labeling rows and cols
         int row_spacing = numDigits(cols + rows - 1);
-        int col_spacing = numDigits(cols * 2 + rows);
-        System.out.println(row_spacing + "," + col_spacing);
+        int col_spacing = numDigits(cols * 2 + rows - 1);
 
         // print top numbers
         for(int i = 0; i < cols; i++) {
             if(i == 0) {
-                System.out.print(cloneString(" ", row_spacing + 1));
+                System.out.print(cloneString(" ", row_spacing));
             }
-            System.out.print(String.format("%-" + col_spacing + "s", cols + rows + i));
+            System.out.print(centerString(Integer.toString(cols + rows + i), col_spacing));
         }
         System.out.println(cloneString(" ", row_spacing));
 
         // print body
         for(int i = 0; i < rows; i++) {
-            System.out.print(String.format("%" + col_spacing + "s", (rows + cols - 1 - i)));
+            System.out.print(String.format("%" + row_spacing + "s", (rows + cols - 1 - i)));
             for(int j = 0; j < cols; j++) {
                 System.out.print(centerChar(getTile(board[i][j]), col_spacing));
             }
@@ -206,10 +201,10 @@ public class Board {
         // print bottom numbers
         for(int i = 0; i < cols; i++) {
             if(i == 0) {
-                System.out.print(cloneString(" ", row_spacing + 1));
+                System.out.print(cloneString(" ", row_spacing));
             }
-            System.out.print(String.format("%-" + col_spacing + "s", i));
-            //System.out.print(centerString(Integer.toString(i), col_spacing));
+            //System.out.print(String.format("%-" + col_spacing + "s", i));
+            System.out.print(centerString(Integer.toString(i), col_spacing));
         }
         System.out.println(cloneString(" ", row_spacing));
     }
@@ -246,11 +241,11 @@ public class Board {
 
     public static String centerString(String toCenter, int length) { //   hello    // (11 - 5) / 2  // (length - toCenter.length()) / 2
         String centered = "";
-        int start_index = (length - toCenter.length()) / 2;
+        int start_index = (int) Math.ceil((length - toCenter.length()) / 2.0);
         for(int i = 0; i < length; i++) {
             if(i == start_index) {
                 centered += toCenter;
-                i += toCenter.length();
+                i += toCenter.length() - 1;
             } else {
                 centered += " ";
             }
