@@ -1,260 +1,80 @@
-import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Created by lhscompsci on 10/15/15.
  */
-public class Board {
+public class Main {
 
-    private int BOARD_SIZE = 10;
-    private int NUM_MIRRORS = 10;
-    private int rows = 10;
-    private int cols = 10;
-    private int mirrors = 10;
+    private static final Scanner scanner = new Scanner(System.in);
+    private static Board board;
 
-    private int[][] board;
-
-    private int guesses = 0;
-    private int correctGuesses = 0;
-    private int shots = 0;
-
-    // directions
-    private static final int UP = -1;
-    private static final int DOWN = 1;
-    private static final int LEFT = -1;
-    private static final int RIGHT = 1;
-
-    // tile ID's
-    private static final int EMPTY = 0; // no mirror
-    private static final int L_MIRROR = 1; // mirror facing left, not revealed
-    private static final int L_MIRROR_R = 2; // mirror facing left, revealed
-    private static final int R_MIRROR = 3; // mirror facing right, not revealed
-    private static final int R_MIRROR_R = 4; // mirror facing right, revealed
-
-    private static final Random random = new Random();
-
-    public int getGuesses() { return guesses; }
-    public int getCorrectGuesses() { return correctGuesses; }
-    public int getShots() { return shots; }
-    public int getMirrors() { return NUM_MIRRORS; }
-
-    public Board() {
-        initBoard();
-    }
-
-    public Board(int rows, int cols, int mirrors) {
-        this.rows = rows;
-        this.cols = cols;
-        this.mirrors = mirrors;
-        initBoard();
-    }
-
-    private void initBoard() {
-        board = new int[rows][cols];
-        int placed_mirrors = 0;
-        do {
-            int row = random.nextInt(rows);
-            int col = random.nextInt(cols);
-            if (board[row][col] == EMPTY) {
-                board[row][col] = (random.nextBoolean() ? L_MIRROR : R_MIRROR); // todo: change
-                placed_mirrors++;
-            }
-        } while (placed_mirrors < mirrors);
-    }
-
-    // converts tileID to char on display
-    private static char getTile(int tileID) throws IndexOutOfBoundsException {
-        switch (tileID) {
-            case EMPTY:
-
-
-                return '.';
-            case L_MIRROR:
-            case L_MIRROR_R:
-                return '/';
-            case R_MIRROR_R:
-            case R_MIRROR:
-                return '\\';
-            default:
-                return '-';
+    public static void main(String[] args) {
+        setBoard();
+        while(board.getCorrectGuesses() < board.getMirrors()) {
+            System.out.println();
+            board.displayBoard();
+            System.out.println();
+            int choice = printMenu();
+            process(choice);
         }
     }
 
-    // board coordinates to screen coordinates of laser
-    private int boardToLaser(int row, int col) {
-        if (row == -1) { // top row;
-            return cols + rows + col;
-        } else if (row == rows) { // bottom row
-            return col;
-        } else if (col == -1) { // left column
-            return cols + rows - row - 1;
-        } else if (col == cols) { // right column
-            return 2 * cols + rows + row;
+    private static void setBoard() {
+        int rows = 10, cols = 10, mirrors = 10;
+        System.out.print("Board Size 10x10. 10 Mirrors Hidden. Change Board? (y/n) ");
+        if(scanner.next().equals("y")) { // take new dimensions
+            System.out.print("Rows? ");
+            rows = scanner.nextInt();
+            System.out.print("Columns? ");
+            cols = scanner.nextInt();
+            System.out.print("Mirrors? ");
+            mirrors = scanner.nextInt();
+            board = new Board(rows, cols, mirrors);
+
         } else {
-            return -1;
+            board = new Board(rows, cols, mirrors); // default board
+        }
+        System.out.println("Initializing...\n");
+    }
+
+    private static int printMenu() {
+        System.out.print(
+                "Choose:\n" +
+                "\t(1) Shoot a Laser\n" +
+                "\t(2) Guess at a Mirror Location\n" +
+                "\t(0) Quit Game\n" +
+                "Enter Choice: "
+        );
+        return scanner.nextInt();
+    }
+
+    private static void process(int menuChoice) {
+        switch (menuChoice) {
+            case 1:
+                System.out.print("Enter laser number to fire: ");
+                int exit_laser = board.fireLaser(scanner.nextInt());
+                System.out.println("Laser " + exit_laser + " hit");
+                if(board.getShots() != 1)
+                    System.out.println(board.getShots() + " total lasers fired\n");
+                break;
+            case 2:
+                System.out.print("Guess at location using two mirrors: ");
+                if(board.guessMirror(scanner.nextInt(), scanner.nextInt())) {
+                    System.out.println("Mirror found. Revealing location on board.\n");
+                } else {
+                    System.out.println("Guess is incorrect\n");
+                }
+                System.out.println(board.getCorrectGuesses() +
+                        " correct out of " + board.getGuesses() + " guess(es) made\n");
+                break;
+            case 3:
+                System.exit(0);
+                break;
         }
     }
 
-    // laser number to board coordinates and direction to fire laser
-    private int[] laserToBoard(int laser) {
-        if(laser < cols) { // bottom row
-            return new int[] { BOARD_SIZE , laser, UP, 0 };
-        } else if(laser >= cols && laser < cols + rows) { // left column
-            return new int[] { BOARD_SIZE - laser % BOARD_SIZE - 1, -1, 0, RIGHT };
-        } else if(laser >= cols + rows && laser < 2 * cols + rows) { // top row
-            return new int[] { -1, laser % BOARD_SIZE, DOWN, 0 };
-        } else if(laser >= 2 * cols + rows && laser < 2 * cols + 2 * rows){ // right column
-            return new int[] { laser % BOARD_SIZE, BOARD_SIZE, 0, LEFT };
-        } else {
-            return null;
-        }
-    }
-
-    // takes guess for mirror location using on-screen coordinates
-    // reveals mirror if guess is right
-    public boolean guessMirror(int laser1, int laser2) {
-        int[] board_1 = laserToBoard(laser1); // use x
-        int[] board_2 = laserToBoard(laser2); // use y
-        int row, col;
-        if(board_1[0] == -1 || board_1[0] == rows) {
-            row = board_2[0];
-            col = board_1[1];
-        } else if(board_1[1] == -1 || board_1[1] == cols) {
-            row = board_1[0];
-            col = board_2[1];
-        } else {
-            row = -1;
-            col = -1;
-        }
-        guesses++;
-        if(board[row][col] != EMPTY && board[row][col] != R_MIRROR_R && board[row][col] != L_MIRROR_R) {
-            correctGuesses++;
-            board[row][col]++; // reveal mirror
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public int fireLaser(int laser) {
-        int[] info = laserToBoard(laser);
-        shots++;
-        return fireLaser(info[0], info[1], info[2], info[3]);
-    }
-
-    public int fireLaser(int row, int col, int dirR, int dirC) {
-        row += dirR;
-        col += dirC;
-        if(row < 0 || row == rows || col < 0 || col == cols) { // return laser if out of bounds
-            return boardToLaser(row, col);
-        }
-        if(board[row][col] == L_MIRROR || board[row][col] == L_MIRROR_R) { // left-facing mirror "/"
-            if(dirC == RIGHT) {
-                dirR = UP;
-                dirC = 0;
-            } else if(dirC == LEFT) {
-                dirR = DOWN;
-                dirC = 0;
-            } else if(dirR == DOWN) {
-                dirR = 0;
-                dirC = LEFT;
-            } else if(dirR == UP) {
-                dirR = 0;
-                dirC = RIGHT;
-            }
-        } else if(board[row][col] == R_MIRROR || board[row][col] == R_MIRROR_R) { // right-facing mirror "\"
-            if(dirC == RIGHT) {
-                dirR = DOWN;
-                dirC = 0;
-            } else if(dirC == LEFT) {
-                dirR = UP;
-                dirC = 0;
-            } else if(dirR == UP) {
-                dirR = 0;
-                dirC = LEFT;
-            } else if(dirR == DOWN) {
-                dirR = 0;
-                dirC = RIGHT;
-            }
-        }
-        return fireLaser(row, col, dirR, dirC);
-    }
-
-    public void displayBoard() {
-        // establish how much space to give each number labeling rows and cols
-        int row_spacing = numDigits(cols + rows - 1);
-        int col_spacing = numDigits(cols * 2 + rows);
-        System.out.println(row_spacing + "," + col_spacing);
-
-        // print top numbers
-        for(int i = 0; i < cols; i++) {
-            if(i == 0) {
-                System.out.print(cloneString(" ", row_spacing + 1));
-            }
-            System.out.print(centerString(Integer.toString(cols + rows + i), col_spacing));
-        }
-        System.out.println(cloneString(" ", row_spacing));
-
-        // print body
-        for(int i = 0; i < rows; i++) {
-            System.out.print(String.format("%" + col_spacing + "s", (rows + cols - 1 - i)));
-            for(int j = 0; j < cols; j++) {
-                System.out.print(centerChar(getTile(board[i][j]), col_spacing));
-            }
-            System.out.println(" " + (2 * cols + rows + i));
-        }
-
-        // print bottom numbers
-        for(int i = 0; i < cols; i++) {
-            if(i == 0) {
-                System.out.print(cloneString(" ", row_spacing + 1));
-            }
-            //System.out.print(String.format("%-" + col_spacing + "s", i));
-            System.out.print(centerString(Integer.toString(i), col_spacing));
-        }
-        System.out.println(cloneString(" ", row_spacing));
-    }
-
-    public static int numDigits(int num) {
-        int digits = 1;
-        while(num > 9) {
-            num /= 10;
-            digits++;
-        }
-        return digits;
-    }
-
-    public static String cloneString(String toClone, int repeats) {
-        String cloned = "";
-        for(int i = 0; i < repeats; i++) {
-            cloned += toClone;
-        }
-        return cloned;
-    }
-
-    // simple center method
-    public static String centerChar(char toCenter, int length) {
-        String centered = "";
-        for(int i = 0; i < length; i++) {
-            if(i == length / 2) {
-                centered += toCenter;
-            } else {
-                centered += " ";
-            }
-        }
-        return centered;
-    }
-
-    public static String centerString(String toCenter, int length) { //   hello    // (11 - 5) / 2  // (length - toCenter.length()) / 2
-        String centered = "";
-        int start_index = (length - toCenter.length()) / 2;
-        for(int i = 0; i < length; i++) {
-            if(i == start_index) {
-                centered += toCenter;
-                i += toCenter.length() - 1;
-            } else {
-                centered += " ";
-            }
-        }
-        return centered;
+    private static void printBoard() {
+        System.out.println();
+        board.displayBoard();
     }
 }
