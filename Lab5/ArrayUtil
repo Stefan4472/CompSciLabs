@@ -1,0 +1,71 @@
+import java.util.Scanner;
+
+/**
+ * Created by lhscompsci on 11/4/15.
+ */
+public class ArrayUtil {
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static int[] initializeArray(int length) {
+        int[] created = new int[length];
+        for(int i = 0; i < length; i++) {
+            System.out.print("Enter Element " + i + ": ");
+            created[i] = scanner.nextInt();
+        }
+        return created;
+    }
+
+    public void display(int[] a) {
+        System.out.println("size of array: " + a.length);
+        printValues(a);
+    }
+
+    public void printValues(int[] a) {
+        System.out.print("array positions: ");
+        for(int i = 0; i < a.length; i++) {
+            System.out.printf("%5d", i);
+        }
+        System.out.println();
+        for(int i = 0; i < a.length; i++) {
+            System.out.printf("%5d", a[i]);
+        }
+    }
+
+    public static int indexOf(int a[], int value) {
+        for(int i = 0; i < a.length; i++) {
+            if(a[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void swapSmallest(int a[]) {
+        int smallest = a[0], index = 0;
+        for(int i = 0; i < a.length; i++) {
+            if(a[i] < smallest) {
+                smallest = a[i];
+                index = i;
+            }
+        }
+        int copy = a[index];
+        a[index] = a[0];
+        a[0] = copy;
+    }
+
+    public static void rotate(int[] a, int steps) {
+        int shift = Math.abs(steps) % a.length * (steps < 0 ? -1 : 1);
+        if(shift != 0) {
+            int new_pos = (a.length + shift) % a.length, copy = a[new_pos], last_copy = a[0];
+            for(int i = 0; i < a.length; i++) {
+                copy = a[new_pos];
+                a[new_pos] = a[last_index];
+                last_index = new_pos;
+                new_pos = (new_pos + shift) % a.length;
+            }
+        }
+    }
+    
+    
+}
