@@ -16,20 +16,24 @@ public class ArrayUtil {
         return created;
     }
 
-    public void display(int[] a) {
+    public static void display(int[] a) {
         System.out.println("size of array: " + a.length);
         printValues(a);
     }
 
-    public void printValues(int[] a) {
+    public static void printValues(int[] a) {
         System.out.print("array positions: ");
         for(int i = 0; i < a.length; i++) {
-            System.out.printf("%5d", i);
+            System.out.printf("%3d", i);
+            System.out.print("  ");
         }
         System.out.println();
+        System.out.print("array entries:   ");
         for(int i = 0; i < a.length; i++) {
-            System.out.printf("%5d", a[i]);
+            System.out.printf("%3d", a[i]);
+            System.out.print("  ");
         }
+        System.out.println();
     }
 
     public static int indexOf(int a[], int value) {
@@ -56,16 +60,40 @@ public class ArrayUtil {
 
     public static void rotate(int[] a, int steps) {
         int shift = Math.abs(steps) % a.length * (steps < 0 ? -1 : 1);
+        System.out.println("Shift = " + shift);
         if(shift != 0) {
-            int new_pos = (a.length + shift) % a.length, copy = a[new_pos], last_copy = a[0];
-            for(int i = 0; i < a.length; i++) {
-                copy = a[new_pos];
-                a[new_pos] = a[last_index];
-                last_index = new_pos;
-                new_pos = (new_pos + shift) % a.length;
+            int copy;
+            if (shift > 0) {
+                for (int i = 0; i < shift; i++) { // shift one element each iteration
+                    copy = a[0];
+                    for(int j = 1; j <= a.length; j++) {
+                        a[j % a.length] = copy;
+                        copy = a[(j + 1) % a.length];
+                    }
+                }
+            } else if (shift < 0) {
+                for (int i = a.length - 1; i > -1; i--) {
+
+                }
             }
         }
     }
-    
-    
+
+    public static int[] removeValue(int[] a, int value) {
+        int num_elements = 0;
+        for(int i = 0; i < a.length; i++) {
+            if(a[i] == value) {
+                num_elements++;
+            }
+        }
+        int[] result = new int[a.length - num_elements];
+        int index = 0;
+        for(int i = 0; i < a.length; i++) {
+            if(a[i] != value) {
+                result[index] = a[i];
+                index++;
+            }
+        }
+        return result;
+    }
 }
