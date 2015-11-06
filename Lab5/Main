@@ -1,0 +1,57 @@
+import java.util.Scanner;
+
+/**
+ * Created by lhscompsci on 11/5/15.
+ */
+public class Main {
+    
+    public static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int[] array = new int[0];
+        while(true) {
+            int menu_choice = printMenu();
+            process(menu_choice, array);
+        }
+    }
+
+    private static int printMenu() {
+        System.out.print(
+                "Menu\n" +
+                        "----------------------------------------\n" +
+                        "1. Input Array\n" +
+                        "2. Display Array\n" +
+                        "3. Search Array\n" +
+                        "4. Smallest Element First\n" +
+                        "5. Rotate Array\n" +
+                        "6. Delete Zeros\n" +
+                        "7. Exit\n" +
+                        "----------------------------------------\n" +
+                        "Enter Option: "
+        );
+        return scanner.nextInt();
+    }
+    
+    private static void process(int menuChoice, int[] array) {
+        switch(menuChoice) {
+            case 1:
+                array = ArrayUtil.initializeArray();
+                break;
+            case 2:
+                
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            default:
+                break;
+        }
+    }
+}
