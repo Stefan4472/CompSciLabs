@@ -7,10 +7,12 @@ public class ArrayUtil {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static int[] initializeArray(int length) {
+    public static int[] initializeArray() {
+        System.out.print("Enter Length of Array: ");
+        int length = scanner.nextInt();
         int[] created = new int[length];
         for(int i = 0; i < length; i++) {
-            System.out.print("Enter Element " + i + ": ");
+            System.out.print("Enter Element [" + i + "] ");
             created[i] = scanner.nextInt();
         }
         return created;
@@ -59,21 +61,15 @@ public class ArrayUtil {
     }
 
     public static void rotate(int[] a, int steps) {
-        int shift = Math.abs(steps) % a.length * (steps < 0 ? -1 : 1);
-        System.out.println("Shift = " + shift);
+        int shift = Math.abs(steps) % a.length;
+        int direction = (steps > 0) ? 1 : -1;
         if(shift != 0) {
-            int copy;
-            if (shift > 0) {
-                for (int i = 0; i < shift; i++) { // shift one element each iteration
-                    copy = a[0];
-                    for(int j = 1; j <= a.length; j++) {
-                        a[j % a.length] = copy;
-                        copy = a[(j + 1) % a.length];
-                    }
-                }
-            } else if (shift < 0) {
-                for (int i = a.length - 1; i > -1; i--) {
-
+            for (int i = 0; i < shift; i++) { // shift one element each iteration
+                int j, copy, prev_element = a[0];
+                for(j = 1; j <= a.length; j++) {
+                    copy = a[(a.length + direction * j) % a.length];
+                    a[(a.length + direction * j) % a.length] = prev_element;
+                    prev_element = copy;
                 }
             }
         }
