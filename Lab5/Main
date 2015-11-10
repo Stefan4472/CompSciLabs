@@ -1,23 +1,28 @@
 import java.util.Scanner;
 
 /**
- * Created by lhscompsci on 11/5/15.
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 11/10/15
+ * Lab: 5
+ * Title: Manipulating Arrays
+ * Purpose: To gain proficiency implementing one-dimensional built-in arrays.
  */
 public class Main {
-    
+
     public static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         int[] array = new int[0];
         while(true) {
             int menu_choice = printMenu();
-            process(menu_choice, array);
+            System.out.println();
+            array = process(menu_choice, array);
         }
     }
 
     private static int printMenu() {
         System.out.print(
-                "Menu\n" +
+                "\nMenu\n" +
                         "----------------------------------------\n" +
                         "1. Input Array\n" +
                         "2. Display Array\n" +
@@ -31,27 +36,56 @@ public class Main {
         );
         return scanner.nextInt();
     }
-    
-    private static void process(int menuChoice, int[] array) {
+
+    private static int[] process(int menuChoice, int[] array) {
         switch(menuChoice) {
             case 1:
                 array = ArrayUtil.initializeArray();
+                System.out.println("\nArray Initialized");
+                ArrayUtil.display(array);
                 break;
             case 2:
-                
+                ArrayUtil.display(array);
+                System.out.println();
                 break;
             case 3:
+                do {
+                    System.out.print("\nWhat entry? ");
+                    int entry = scanner.nextInt();
+                    int position = ArrayUtil.indexOf(array, entry);
+                    if (position < 0) {
+                        System.out.println("status: not found");
+                    } else {
+                        System.out.println("status: found at position " + position);
+                    }
+                    System.out.print("another search (yes/no)? ");
+                } while (scanner.next().equals("yes"));
                 break;
             case 4:
+                ArrayUtil.smallestFirst(array);
+                ArrayUtil.printValues(array);
                 break;
             case 5:
+                do {
+                    System.out.print("\nhow many steps? ");
+                    int steps = scanner.nextInt();
+                    ArrayUtil.rotate(array, steps);
+                    System.out.println("rotated array");
+                    ArrayUtil.printValues(array);
+                    System.out.print("rotate again (yes/no)? ");
+                } while (scanner.next().equals("yes"));
                 break;
             case 6:
+                array = ArrayUtil.removeValue(array, 0);
+                ArrayUtil.display(array);
                 break;
             case 7:
+                System.out.print("Exiting program...");
+                System.exit(0);
                 break;
             default:
                 break;
         }
+        return array;
     }
 }
