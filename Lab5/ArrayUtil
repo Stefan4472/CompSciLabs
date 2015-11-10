@@ -1,7 +1,11 @@
 import java.util.Scanner;
 
 /**
- * Created by lhscompsci on 11/4/15.
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 11/10/15
+ * Lab: 5
+ * Title: Manipulating Arrays
+ * Purpose: To gain proficiency implementing one-dimensional built-in arrays.
  */
 public class ArrayUtil {
 
@@ -12,7 +16,7 @@ public class ArrayUtil {
         int length = scanner.nextInt();
         int[] created = new int[length];
         for(int i = 0; i < length; i++) {
-            System.out.print("Enter Element [" + i + "] ");
+            System.out.print("Element [" + i + "] = ");
             created[i] = scanner.nextInt();
         }
         return created;
@@ -47,7 +51,7 @@ public class ArrayUtil {
         return -1;
     }
 
-    public static void swapSmallest(int a[]) {
+    public static void smallestFirst(int a[]) {
         int smallest = a[0], index = 0;
         for(int i = 0; i < a.length; i++) {
             if(a[i] < smallest) {
