@@ -1,7 +1,11 @@
 import java.util.Scanner;
 
 /**
- * Created by lhscompsci on 10/15/15.
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 1/15/16
+ * Lab: 4
+ * Title: Black Box
+ * Purpose: Use recursive methods in a real-life scenario
  */
 public class Main {
 
@@ -40,10 +44,10 @@ public class Main {
     private static int printMenu() {
         System.out.print(
                 "Choose:\n" +
-                "\t(1) Shoot a Laser\n" +
-                "\t(2) Guess at a Mirror Location\n" +
-                "\t(0) Quit Game\n" +
-                "Enter Choice: "
+                        "\t(1) Shoot a Laser\n" +
+                        "\t(2) Guess at a Mirror Location\n" +
+                        "\t(0) Quit Game\n" +
+                        "Enter Choice: "
         );
         return scanner.nextInt();
     }

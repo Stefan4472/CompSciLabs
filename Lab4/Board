@@ -1,7 +1,11 @@
 import java.util.Random;
 
 /**
- * Created by lhscompsci on 10/15/15.
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 1/15/16
+ * Lab: 4
+ * Title: Black Box
+ * Purpose: Use recursive methods in a real-life scenario
  */
 public class Board {
 
