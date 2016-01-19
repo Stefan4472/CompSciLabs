@@ -4,33 +4,37 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- * Created by lhscompsci on 1/7/16.
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 1/15/16
+ * Lab: 9
+ * Title: Cabbages
+ * Purpose: Process Strings and files
  */
 public class Main {
 
     private static Scanner scanner = new Scanner(System.in);
-    // used to assign each char a value for alphabetical sorting
-    private Character[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'y'};
 
     public static void main(String[] args) {
-        String path = "Cabbages.txt";
+        File cabbages_file = new File("Cabbages.txt");
         try { // establish file exists up here
-            Scanner scan_file = new Scanner(new File(path));
+            Scanner scan_file = new Scanner(cabbages_file);
             int num_words = firstRead(scan_file);
 
-            Scanner scan2 = new Scanner(new File(path));
-            String[] processed = secondRead(scan2, num_words);
+            scan_file = new Scanner(cabbages_file);
+            String[] processed = secondRead(scan_file, num_words);
             System.out.println("\n\nWords sorted alphabetically with duplicates removed--");
             for(int i = 0; i < processed.length; i++) {
                 System.out.println(i + " " + processed[i]);
             }
 
-            System.out.println("Enter String to grep: ");
-            String to_find = scanner.next();
-            Scanner scan3 = new Scanner(new File(path));
-            grep(scan3, to_find);
+            for(int i = 0; i < 2; i++) {
+                System.out.print("\nEnter String to grep: ");
+                String to_find = scanner.next();
+                scan_file = new Scanner(cabbages_file);
+                grep(scan_file, to_find);
+            }
         } catch (FileNotFoundException e) {
-            System.out.println("Error: could not open file << " + path + " >>");
+            System.out.println("Error: could not open Cabbages.txt");
         }
 
     }
@@ -38,6 +42,7 @@ public class Main {
     private static int firstRead(Scanner readFile) {
         int num_words = 0, longest_length = 0;
         String word, longest_word = "";
+        System.out.println("Words found in text --");
         while(readFile.hasNext()) {
             // read in word and strip unwanted punctuation
             word = readFile.next();
@@ -48,7 +53,6 @@ public class Main {
             }
             System.out.println(num_words + " " + word);
         }
-        scanner.close();
         System.out.println("The longest word in the text is <" + longest_word + ">");
         return num_words;
     }
@@ -128,13 +132,13 @@ public class Main {
             this_line = readFile.nextLine();
             if(this_line.contains(toFind)) {
                 int location = this_line.indexOf(toFind);
-                System.out.println(counter + " " + this_line.substring(0, location) +
+                System.out.println("Line " + counter + ": " + this_line.substring(0, location) +
                         "<" + toFind + ">" + this_line.substring(location + toFind.length()));
                 found = true;
             }
         }
         if(!found) {
-            System.out.println("<<" + toFind + ">> does not appear in the file");
+            System.out.println("<" + toFind + "> does not appear in the file");
         }
     }
 }
