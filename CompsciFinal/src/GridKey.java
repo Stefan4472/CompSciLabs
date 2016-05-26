@@ -19,6 +19,10 @@ public class GridKey {
         return key;
     }
 
+    // returns char at (row, col) of key
+    public char get(int row, int col) {
+        return key[row][col];
+    }
     // constructs GridKey from String
     // String must contain 8x8
     public static GridKey parseGridKey(String key) throws Exception { // todo: check validity of key
@@ -51,8 +55,8 @@ public class GridKey {
     }
 
     // returns GridKey with characters rotated 90 degrees counter-clockwise
-    public static GridKey rotate90Degrees(char[][] toRotate) {
-        char[][] original = toRotate;
+    public static GridKey rotate90Degrees(GridKey toRotate) {
+        char[][] original = toRotate.getKey();
         char[][] rotated = new char[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
