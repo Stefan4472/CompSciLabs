@@ -12,6 +12,7 @@ public class Main {
             System.out.println("File contents:\n" + grid_key);
             GridKey parsed = GridKey.parseGridKey(grid_key);
             System.out.println(parsed.toString());
+            System.out.println("\nRotated 90 degrees:\n" + GridKey.rotate90Degrees(parsed.getKey()));
         } catch (IOException e) {
             System.out.println("Error reading file");
         } catch (Exception e) {
