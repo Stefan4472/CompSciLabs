@@ -80,15 +80,8 @@ public class GridKey {
         return new GridKey(rotated);
     }
 
-    @Override
+    @Override // return key as String
     public String toString() {
-        String as_string = "";
-        for (char[] row : key) {
-            for (char element : row) {
-                as_string += element;
-            }
-            as_string += "\n";
-        }
-        return as_string;
+        return StringUtil.charArrayToString(key);
     }
 }

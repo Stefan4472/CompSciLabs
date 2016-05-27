@@ -54,8 +54,6 @@ public class CipherMachine {
         for (int i = 0; i < message.length(); i++) {
             if (message.charAt(i) == '\n') { // linebreak found
                 current_line = decodeLine(current_line, gridKey);
-                current_line = current_line.substring(current_line.indexOf("^") + 1);
-                current_line = StringUtil.reverseString(current_line);
                 decoded += current_line + "\n";
                 current_line = "";
             } else {
@@ -68,24 +66,22 @@ public class CipherMachine {
     // line must have been processed in the encodeMessage method
     // must be 64 characters
     private static String decodeLine(String line, GridKey gridKey) {
-        char[][] decoded = new char[8][8];
+        // re-build encrypted matrix
+        char[][] encrypted = StringUtil.buildCharArray(line);
+        String decrypted = "";
         GridKey key = gridKey;
-        for (int i = 4; i >= 1; i--) {
+        for (int i = 4; i > 0; i--) {
             key = GridKey.rotate90DegreesCCW(key);
-            // take the next 16 characters to encode
-            String chunk = line.substring((i - 1) * 16, i * 16);
-            //chunk = StringUtil.reverseString(chunk);
-            int char_counter = 15;
+            // read in characters through GridKey from bottom right to top left
             for (int j = 7; j >= 0; j--) {
                 for (int k = 7; k >= 0; k--) {
                     // found open slot
                     if (key.get(j, k) == ' ') {
-                        decoded[j][k] = chunk.charAt(char_counter);
-                        char_counter--;
+                        decrypted += encrypted[j][k];
                     }
                 }
             }
         }
-        return StringUtil.buildString(decoded);
+        return decrypted;
     }
 }
