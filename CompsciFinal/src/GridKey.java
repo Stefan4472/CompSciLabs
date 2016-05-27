@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Random;
 
 /**
  * Created by Stefan on 5/26/2016.
@@ -7,8 +8,33 @@ public class GridKey {
 
     private char[][] key;
 
+    // creates a new GridKey and generates a new key
     public GridKey() {
         key = new char[8][8];
+        ArrayUtil.fillArray(key, 'X');
+        Random random = new Random();
+        for (int i = 1; i <= 16; i++) {
+            // randomly choose next quadrant to put in a blank space
+            int quadrant = random.nextInt(4);
+            // figure out where number would be in first quadrant
+            int row = (i - 1) / 4;
+            int col = (i - 1) % 4;
+            // determine coordinates where number will land given quadrant
+            switch (quadrant) {
+                case 0:
+                    key[row][col] = ' ';
+                    break;
+                case 1:
+                    key[col][7 - row] = ' ';
+                    break;
+                case 2:
+                    key[7 - row][7 - col] = ' ';
+                    break;
+                case 3:
+                    key[7 - col][row] = ' ';
+                    break;
+            }
+        }
     }
 
     public GridKey(char[][] key) {
@@ -23,6 +49,7 @@ public class GridKey {
     public char get(int row, int col) {
         return key[row][col];
     }
+
     // constructs GridKey from String
     // String must contain 8x8
     public static GridKey parseGridKey(String key) { // todo: check validity of key
