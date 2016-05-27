@@ -5,7 +5,7 @@ public class CipherMachine {
 
     // uses specified GridKey to encode the message and returns the
     // encoded result
-    public static String encodeMessage(String message, GridKey gridKey) {
+    public static String encryptMessage(String message, GridKey gridKey) {
         String current_line = "";
         String encoded = "";
         for (int i = 0; i < message.length(); i++) {
@@ -15,7 +15,7 @@ public class CipherMachine {
                     current_line += "^";
                 }
                 current_line = StringUtil.reverseString(current_line);
-                encoded += encodeLine(current_line, gridKey) + "\n";
+                encoded += encryptLine(current_line, gridKey) + "\n";
                 current_line = "";
             } else {
                 current_line += message.charAt(i);
@@ -24,9 +24,9 @@ public class CipherMachine {
         return encoded;
     }
 
-    // line must have been processed in the encodeMessage method
+    // line must have been processed in the encryptMessage method
     // must be 64 characters and reversed
-    private static String encodeLine(String line, GridKey gridKey) {
+    private static String encryptLine(String line, GridKey gridKey) {
         char[][] encoded = new char[8][8];
         GridKey key = gridKey;
         for (int i = 1; i <= 4; i++) {
@@ -48,12 +48,12 @@ public class CipherMachine {
     }
 
     // uses given GridKey to decode message and returns decoded message
-    public static String decodeMessage(String message, GridKey gridKey) {
+    public static String decryptMessage(String message, GridKey gridKey) {
         String current_line = "";
         String decoded = "";
         for (int i = 0; i < message.length(); i++) {
             if (message.charAt(i) == '\n') { // linebreak found
-                current_line = decodeLine(current_line, gridKey);
+                current_line = decryptLine(current_line, gridKey);
                 current_line = current_line.substring(0, current_line.indexOf("^"));
                 decoded += current_line + "\n";
                 current_line = "";
@@ -64,9 +64,9 @@ public class CipherMachine {
         return decoded;
     }
 
-    // line must have been processed in the encodeMessage method
+    // line must have been processed in the encryptMessage method
     // must be 64 characters
-    private static String decodeLine(String line, GridKey gridKey) {
+    private static String decryptLine(String line, GridKey gridKey) {
         // re-build encrypted matrix
         char[][] encrypted = StringUtil.buildCharArray(line);
         String decrypted = "";
