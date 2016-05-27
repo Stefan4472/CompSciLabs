@@ -54,6 +54,7 @@ public class CipherMachine {
         for (int i = 0; i < message.length(); i++) {
             if (message.charAt(i) == '\n') { // linebreak found
                 current_line = decodeLine(current_line, gridKey);
+                current_line = current_line.substring(0, current_line.indexOf("^"));
                 decoded += current_line + "\n";
                 current_line = "";
             } else {
