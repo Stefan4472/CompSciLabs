@@ -25,7 +25,7 @@ public class GridKey {
     }
     // constructs GridKey from String
     // String must contain 8x8
-    public static GridKey parseGridKey(String key) throws Exception { // todo: check validity of key
+    public static GridKey parseGridKey(String key) { // todo: check validity of key
         char[][] parsed = new char[8][8];
         int row = 0, col = 0;
         for (int i = 0; i < key.length(); i++) {
@@ -39,13 +39,15 @@ public class GridKey {
                 row++;
                 col = 0;
             } else {
-                throw new Exception("Error: " + key.charAt(i) + " is not a recognized character");
+                //throw new Exception("Error: " + key.charAt(i) + " is not a recognized character");
+                return null;
             }
         }
         if (isValid(parsed)) {
             return new GridKey(parsed);
         } else {
-            throw new Exception("Error: Invalid GridKey");
+            //throw new Exception("Error: Invalid GridKey");
+            return null;
         }
     }
 
@@ -54,13 +56,25 @@ public class GridKey {
         return true;
     }
 
-    // returns GridKey with characters rotated 90 degrees counter-clockwise
-    public static GridKey rotate90Degrees(GridKey toRotate) {
+    // returns GridKey with characters rotated 90 degrees clockwise
+    public static GridKey rotate90DegreesCW(GridKey toRotate) {
         char[][] original = toRotate.getKey();
         char[][] rotated = new char[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 rotated[j][7 - i] = original[i][j];
+            }
+        }
+        return new GridKey(rotated);
+    }
+
+    // returns GridKey with characters rotated 90 degrees counter-clockwise
+    public static GridKey rotate90DegreesCCW(GridKey toRotate) {
+        char[][] original = toRotate.getKey();
+        char[][] rotated = new char[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                rotated[7 - j][i] = original[i][j];
             }
         }
         return new GridKey(rotated);

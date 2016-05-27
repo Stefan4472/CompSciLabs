@@ -11,11 +11,12 @@ public class Main {
             String grid_key = FileIO.readFile(new File("grid1"));
             String message = FileIO.readFile(new File("message"));
             GridKey parsed = GridKey.parseGridKey(grid_key);
-            FileIO.writeFile(new File("encoded"), CipherMachine.encodeMessage(message, parsed));
+            String encoded = CipherMachine.encodeMessage(message, parsed);
+            FileIO.writeFile(new File("encoded"), encoded);
+            String decoded = CipherMachine.decodeMessage(encoded, parsed);
+            FileIO.writeFile(new File("decoded"), decoded);
         } catch (IOException e) {
             System.out.println("Error reading file");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
     }
 }

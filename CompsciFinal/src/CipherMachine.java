@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Created by Stefan on 5/26/2016.
  */
@@ -10,7 +8,6 @@ public class CipherMachine {
     public static String encodeMessage(String message, GridKey gridKey) {
         String current_line = "";
         String encoded = "";
-        // split message into array of lines (will remove linebreaks
         for (int i = 0; i < message.length(); i++) {
             if (message.charAt(i) == '\n') { // linebreak found
                 // bring current line up to 64 chars
@@ -45,8 +42,50 @@ public class CipherMachine {
                     }
                 }
             }
-            key = GridKey.rotate90Degrees(key);
+            key = GridKey.rotate90DegreesCW(key);
         }
         return StringUtil.buildString(encoded);
+    }
+
+    // uses given GridKey to decode message and returns decoded message
+    public static String decodeMessage(String message, GridKey gridKey) {
+        String current_line = "";
+        String decoded = "";
+        for (int i = 0; i < message.length(); i++) {
+            if (message.charAt(i) == '\n') { // linebreak found
+                current_line = decodeLine(current_line, gridKey);
+                current_line = current_line.substring(current_line.indexOf("^") + 1);
+                current_line = StringUtil.reverseString(current_line);
+                decoded += current_line + "\n";
+                current_line = "";
+            } else {
+                current_line += message.charAt(i);
+            }
+        }
+        return decoded;
+    }
+
+    // line must have been processed in the encodeMessage method
+    // must be 64 characters
+    private static String decodeLine(String line, GridKey gridKey) {
+        char[][] decoded = new char[8][8];
+        GridKey key = gridKey;
+        for (int i = 4; i >= 1; i--) {
+            key = GridKey.rotate90DegreesCCW(key);
+            // take the next 16 characters to encode
+            String chunk = line.substring((i - 1) * 16, i * 16);
+            //chunk = StringUtil.reverseString(chunk);
+            int char_counter = 15;
+            for (int j = 7; j >= 0; j--) {
+                for (int k = 7; k >= 0; k--) {
+                    // found open slot
+                    if (key.get(j, k) == ' ') {
+                        decoded[j][k] = chunk.charAt(char_counter);
+                        char_counter--;
+                    }
+                }
+            }
+        }
+        return StringUtil.buildString(decoded);
     }
 }
