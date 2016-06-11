@@ -1,8 +1,15 @@
 import java.io.*;
 
 /**
- * Convenience File reading and writing methods
+ * /**
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 5/27/16
+ * Lab: Final Project
+ * Title: Cryptography
+ * Purpose: Demonstrate knowledge of programming
  */
+
+// Convenience File reading and writing methods
 public class FileIO {
 
     // reads file and returns String

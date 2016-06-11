@@ -3,30 +3,20 @@ import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * Created by Stefan on 5/26/2016.
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 5/27/16
+ * Lab: Final Project
+ * Title: Cryptography
+ * Purpose: Demonstrate knowledge of programming
  */
 public class Main {
-    // todo: headers
 
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        /*try {
-            String grid_key = FileIO.readFile(new File("grid1"));
-            String message = FileIO.readFile(new File("message"));
-            GridKey parsed = GridKey.parseGridKey(grid_key);
-            String encoded = CipherMachine.encryptMessage(message, parsed);
-            FileIO.writeFile(new File("encoded"), encoded);
-            String decoded = CipherMachine.decryptMessage(encoded, parsed);
-            FileIO.writeFile(new File("decoded"), decoded);
-            GridKey key = new GridKey();
-            FileIO.writeFile(new File("key"), key.toString());
-        } catch (IOException e) {
-            System.out.println("Error reading file");
-        }*/
         GridKey current_key = null;
         while (true) {
-            System.out.println(
+            System.out.print(
                     "Main Menu:\n" +
                             "1. Import Grid Key from File\n" +
                             "2. Write Current Grid Key to File\n" +
@@ -37,18 +27,19 @@ public class Main {
                             "Enter Choice: "
             );
             int choice = Integer.parseInt(scanner.nextLine());
+            System.out.println();
             switch (choice) {
                 case 1:
                     current_key = importKey();
                     break;
                 case 2:
                     if (current_key == null) {
-                        System.out.println("There is no current Grid Key to write.\nPlease import one from a file or generate a new one.");
+                        System.out.println("There is no current Grid Key to write.\nPlease import one from a file or generate a new one.\n");
                     } else {
                         if (writeKeyToFile(current_key)) {
-                            System.out.println("Key written to file successfully");
+                            System.out.println("Key written to file successfully\n");
                         } else {
-                            System.out.println("There was an error writing the key to the specified file");
+                            System.out.println("There was an error writing the key to the specified file\n");
                         }
                     }
                     break;
@@ -58,14 +49,14 @@ public class Main {
                     break;
                 case 4:
                     if (current_key == null) {
-                        System.out.println("There is no current Grid Key to write.\nPlease import one from a file or generate a new one.");
+                        System.out.println("There is no current Grid Key to write.\nPlease import one from a file or generate a new one.\n");
                     } else {
                         encryptFile(current_key);
                     }
                     break;
                 case 5:
                     if (current_key == null) {
-                        System.out.println("There is no current Grid Key to write.\nPlease import one from a file or generate a new one.");
+                        System.out.println("There is no current Grid Key to write.\nPlease import one from a file or generate a new one.\n");
                     } else {
                         decryptFile(current_key);
                     }
@@ -74,7 +65,7 @@ public class Main {
                     exit();
                     break;
                 default:
-                    System.out.println("Error: Invalid choice");
+                    System.out.println("Error: Invalid choice.\n");
                     break;
             }
         }
@@ -85,9 +76,11 @@ public class Main {
         File to_read = new File(scanner.nextLine());
         try {
             String key = FileIO.readFile(to_read);
-            return GridKey.parseGridKey(key);
+            GridKey imported = GridKey.parseGridKey(key);
+            System.out.println("\nImported Key:\n" + imported);
+            return imported;
         } catch (IOException e) {
-            System.out.println("There was an error reading the specified file");
+            System.out.println("There was an error reading the specified file.\n");
             return null;
         }
     }
@@ -103,25 +96,45 @@ public class Main {
         File to_read = new File(scanner.nextLine());
         try {
             String message = FileIO.readFile(to_read);
+            System.out.println("Original text:\n" + message);
             String encrypted = CipherMachine.encryptMessage(message, key);
             System.out.println("Encrypted text:\n" + encrypted);
             System.out.print("Write encrypted text to file? (y/n) ");
             if (scanner.nextLine().equals("y")) {
                 System.out.print("Enter path of file to write to: ");
-                File to_wirte = new File(scanner.nextLine());
-                if (FileIO.writeFile(to_wirte, encrypted)) {
-                    System.out.println("Encrypted text written to file successfully");
+                File to_write = new File(scanner.nextLine());
+                if (FileIO.writeFile(to_write, encrypted)) {
+                    System.out.println("Encrypted text written to file successfully\n");
                 } else {
-                    System.out.println("There was an error writing to the specified file");
+                    System.out.println("There was an error writing to the specified file\n");
                 }
             }
         } catch (IOException e) {
-            System.out.println("There was an error reading the specified file");
+            System.out.println("There was an error reading the specified file\n");
         }
     }
 
-    private static boolean decryptFile(GridKey key) {
-        
+    private static void decryptFile(GridKey key) {
+        System.out.print("Enter path of file to read message from: ");
+        File to_read = new File(scanner.nextLine());
+        try {
+            String message = FileIO.readFile(to_read);
+            System.out.println("Original message:\n" + message);
+            String decrypted = CipherMachine.decryptMessage(message, key);
+            System.out.println("Decrypted text:\n" + decrypted);
+            System.out.print("Write decrypted text to file? (y/n) ");
+            if (scanner.nextLine().equals("y")) {
+                System.out.print("Enter path of file to write to: ");
+                File to_write = new File(scanner.nextLine());
+                if (FileIO.writeFile(to_write, decrypted)) {
+                    System.out.println("Decrypted text written to file successfully\n");
+                } else {
+                    System.out.println("There was an error writing to the specified file\n");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("There was an error reading the specified file\n");
+        }
     }
 
     private static void exit() {

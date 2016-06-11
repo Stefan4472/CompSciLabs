@@ -1,6 +1,10 @@
 /**
- * Created by Stefan on 5/26/2016.
- */
+ * Your name: Stefan Kussmaul
+ * Class block: H				Date: 5/27/16
+ * Lab: Final Project
+ * Title: Cryptography
+ * Purpose: Demonstrate knowledge of programming
+ */v
 public class CipherMachine {
 
     // uses specified GridKey to encode the message and returns the
